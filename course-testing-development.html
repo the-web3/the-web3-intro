@@ -1,0 +1,1221 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>区块链测试开发课程详细大纲</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a2332 25%, #0d4f3c 50%, #1a2332 75%, #0a0a0a 100%);
+            color: #ffffff;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        .container {
+            position: relative;
+            width: 100%;
+            min-height: 100vh;
+        }
+
+        /* 背景动画粒子 */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: linear-gradient(45deg, #00ff88, #0088ff);
+            border-radius: 50%;
+            animation: float 6s infinite linear;
+            opacity: 0.7;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.7;
+            }
+            90% {
+                opacity: 0.7;
+            }
+            100% {
+                transform: translateY(-100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* 幻灯片容器 */
+        .slide-container {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            overflow: visible;
+        }
+
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            opacity: 0;
+            transform: translateX(100%);
+            transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            padding: 60px 30px 80px;
+            z-index: 10;
+            overflow-y: auto;
+        }
+
+        .slide.active {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .slide.prev {
+            transform: translateX(-100%);
+        }
+
+        .slide-content {
+            max-width: 1400px;
+            width: 100%;
+            text-align: center;
+            animation: slideInUp 1s ease-out;
+            padding-top: 20px;
+        }
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* 标题样式 */
+        .slide h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, #00ff88, #0088ff, #9966ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 30px;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        .slide h2 {
+            font-size: 2.5rem;
+            font-weight: 600;
+            background: linear-gradient(45deg, #ffaa00, #00ff88);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 40px;
+        }
+
+        @keyframes glow {
+            from {
+                text-shadow: 0 0 20px rgba(0, 255, 136, 0.5);
+            }
+            to {
+                text-shadow: 0 0 30px rgba(0, 136, 255, 0.8);
+            }
+        }
+
+        /* 描述文字 */
+        .description {
+            font-size: 1.2rem;
+            line-height: 1.8;
+            margin-bottom: 40px;
+            color: #e0e0e0;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* 导航控制 - 隐藏圆点导航 */
+        .slide-nav {
+            display: none;
+        }
+
+        /* 箭头导航 */
+        .slide-arrow {
+            position: fixed;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 50px;
+            height: 50px;
+            background: rgba(0, 255, 136, 0.2);
+            border: 2px solid rgba(0, 255, 136, 0.5);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 1000;
+            color: #ffffff;
+            font-size: 16px;
+        }
+
+        .slide-arrow:hover {
+            background: rgba(0, 255, 136, 0.4);
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .arrow-prev {
+            left: 30px;
+        }
+
+        .arrow-next {
+            right: 30px;
+        }
+
+        /* 第一页网格布局 */
+        .overview-grid {
+            display: grid;
+            grid-template-columns: 1fr 2px 1fr;
+            gap: 40px;
+            margin-top: 50px;
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .overview-section {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .overview-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(0, 255, 136, 0.3);
+            border-radius: 15px;
+            padding: 25px;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .overview-card:hover {
+            border-color: rgba(0, 255, 136, 0.6);
+            box-shadow: 0 15px 30px rgba(0, 255, 136, 0.2);
+            transform: translateY(-5px);
+        }
+
+        .overview-card h3 {
+            color: #00ff88;
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .overview-card ul {
+            list-style: none;
+            padding: 0;
+            text-align: left;
+        }
+
+        .overview-card li {
+            color: #e0e0e0;
+            margin-bottom: 8px;
+            padding-left: 20px;
+            position: relative;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+
+        .overview-card li::before {
+            content: '•';
+            color: #00ff88;
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+
+        /* 分隔线 */
+        .divider {
+            background: linear-gradient(to bottom, transparent, #00ff88, #0088ff, transparent);
+            opacity: 0.6;
+        }
+
+        /* 详细页面布局 - 三列网格 */
+        .detail-grid {
+            display: grid;
+            grid-template-columns: 1fr 2px 1fr 2px 1fr;
+            gap: 25px;
+            margin-top: 40px;
+            max-width: 1500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .detail-section {
+            padding: 0 10px;
+        }
+
+        .detail-section h3 {
+            color: #00ff88;
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            text-align: center;
+            border-bottom: 2px solid #00ff88;
+            padding-bottom: 8px;
+        }
+
+        .detail-section h4 {
+            color: #0088ff;
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+            margin-top: 20px;
+        }
+
+        .detail-section ul {
+            list-style: none;
+            padding: 0;
+            text-align: left;
+        }
+
+        .detail-section > ul > li {
+            color: #e0e0e0;
+            margin-bottom: 10px;
+            padding-left: 20px;
+            position: relative;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+
+        .detail-section > ul > li::before {
+            content: '•';
+            color: #00ff88;
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+
+        /* 子级别项目 */
+        .sub-list {
+            margin-top: 8px;
+            margin-left: 15px;
+        }
+
+        .sub-list li {
+            color: #cccccc;
+            margin-bottom: 6px;
+            padding-left: 15px;
+            position: relative;
+            font-size: 0.85rem;
+            line-height: 1.3;
+        }
+
+        .sub-list li::before {
+            content: '•';
+            color: #0088ff;
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+
+        /* 组件框样式 - 绿蓝渐变 */
+        .component-box {
+            background: linear-gradient(135deg, rgba(0, 255, 136, 0.15), rgba(0, 136, 255, 0.15));
+            border: 2px solid rgba(0, 255, 136, 0.4);
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            min-height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .component-box:hover {
+            transform: translateY(-5px);
+            border-color: rgba(0, 255, 136, 0.6);
+            box-shadow: 0 15px 30px rgba(0, 255, 136, 0.3);
+            background: linear-gradient(135deg, rgba(0, 255, 136, 0.25), rgba(0, 136, 255, 0.25));
+        }
+
+        .component-box::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(0, 255, 136, 0.1), transparent);
+            transform: rotate(45deg);
+            transition: all 0.5s ease;
+            opacity: 0;
+        }
+
+        .component-box:hover::before {
+            opacity: 1;
+            transform: rotate(45deg) translate(50%, 50%);
+        }
+
+        .component-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #ffffff;
+            position: relative;
+            z-index: 2;
+            line-height: 1.3;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .slide h1 {
+                font-size: 2.5rem;
+            }
+            
+            .slide h2 {
+                font-size: 2rem;
+            }
+            
+            .description {
+                font-size: 1rem;
+            }
+            
+            .slide {
+                padding: 40px 15px 80px;
+            }
+
+            .overview-grid,
+            .detail-grid {
+                grid-template-columns: 1fr !important;
+                gap: 20px !important;
+            }
+
+            .divider {
+                display: none !important;
+            }
+
+            .detail-section {
+                padding: 0 !important;
+                margin-bottom: 25px !important;
+            }
+
+            .detail-section h3 {
+                font-size: 1.2rem !important;
+                margin-bottom: 15px !important;
+            }
+
+            .detail-section h4 {
+                font-size: 1rem !important;
+                margin-bottom: 10px !important;
+            }
+
+            .detail-section > ul > li {
+                font-size: 0.85rem !important;
+                margin-bottom: 8px !important;
+            }
+
+            .sub-list li {
+                font-size: 0.8rem !important;
+                margin-bottom: 5px !important;
+            }
+
+            /* 组件框移动端优化 */
+            #slide4 > .slide-content > div {
+                flex-direction: column !important;
+                gap: 30px !important;
+            }
+
+            #slide4 .component-box {
+                min-height: 60px !important;
+                padding: 15px !important;
+            }
+
+            #slide4 .component-title {
+                font-size: 0.9rem !important;
+            }
+
+            #slide4 > .slide-content > div > div:last-child {
+                grid-template-columns: 1fr !important;
+                gap: 15px !important;
+            }
+
+            #slide4 .component-box[style*="grid-column"] {
+                grid-column: 1 !important;
+            }
+
+            /* 左侧Solidity基础组件框移动端优化 */
+            #slide4 > .slide-content > div > div:first-child > div:last-child > div {
+                grid-template-columns: 1fr !important;
+                gap: 10px !important;
+            }
+
+            #slide4 > .slide-content > div > div:first-child .component-box {
+                min-height: 50px !important;
+                padding: 10px !important;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .slide {
+                padding: 30px 10px 70px;
+            }
+
+            .slide h1 {
+                font-size: 2rem;
+                margin-bottom: 20px;
+            }
+            
+            .slide h2 {
+                font-size: 1.8rem;
+                margin-bottom: 25px;
+            }
+        }
+
+        /* 导航栏样式 */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(15px);
+            z-index: 1000;
+            padding: 20px 0;
+            border-bottom: 1px solid rgba(0, 255, 136, 0.15);
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+
+        .navbar:hover {
+            background: rgba(0, 0, 0, 0.2);
+            border-bottom-color: rgba(0, 255, 136, 0.3);
+        }
+
+        .nav-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 50px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, #00ff88, #0088ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            filter: drop-shadow(0 0 8px rgba(0, 255, 136, 0.4));
+        }
+
+        .logo:hover {
+            transform: scale(1.05);
+            filter: drop-shadow(0 0 12px rgba(0, 255, 136, 0.8));
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            list-style: none;
+            position: relative;
+        }
+
+        .nav-links a {
+            color: rgba(255, 255, 255, 0.9);
+            text-decoration: none;
+            font-weight: 500;
+            padding: 8px 16px;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+            position: relative;
+            backdrop-filter: blur(5px);
+        }
+
+        .nav-links a:hover {
+            color: #ffffff;
+            background: rgba(0, 255, 136, 0.15);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 255, 136, 0.2);
+            text-shadow: 0 0 8px rgba(0, 255, 136, 0.6);
+        }
+
+        .nav-links a.active {
+            color: #ffffff;
+            background: linear-gradient(135deg, rgba(0, 255, 136, 0.2), rgba(0, 136, 255, 0.2));
+            border: 1px solid rgba(0, 255, 136, 0.4);
+            box-shadow: 0 4px 15px rgba(0, 255, 136, 0.3);
+            text-shadow: 0 0 10px rgba(0, 255, 136, 0.8);
+        }
+
+        .container {
+            padding-top: 80px;
+        }
+
+        /* 移动端响应式 */
+        @media (max-width: 768px) {
+            .nav-content {
+                padding: 0 20px;
+            }
+            
+            .nav-links {
+                gap: 15px;
+            }
+            
+            .nav-links a {
+                font-size: 0.9rem;
+                padding: 6px 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="nav-content">
+            <a href="index.html" class="logo">The Web3 社区</a>
+            <ul class="nav-links">
+                <li><a href="index.html">首页</a></li>
+                <li><a href="course-tech-development.html">技术课程大纲</a></li>
+                <li><a href="course-product-research.html">产品投研课程</a></li>
+                <li><a href="course-testing-development.html" class="active">测试开发课程</a></li>
+            </ul>
+        </div>
+    </nav>
+    <!-- 背景粒子 -->
+    <div class="particles" id="particles"></div>
+
+    <!-- 幻灯片容器 -->
+    <div class="slide-container">
+        <!-- 幻灯片1: 课程总览 -->
+        <div class="slide active" id="slide1">
+            <div class="slide-content">
+                <h1>区块链测试开发课程</h1>
+                <p class="description">
+                    全面系统的区块链测试开发培训课程<br>
+                    涵盖Web3产品业务流程理解与测试开发实战两大核心模块
+                </p>
+                
+                <div class="overview-grid">
+                    <!-- 左侧：理论基础 -->
+                    <div class="overview-section">
+                        <div class="overview-card">
+                            <h3>1. 熟悉 Web3 产品业务流程</h3>
+                            <ul>
+                                <li>区块链基础知识</li>
+                                <li>钱包产品课程模块</li>
+                                <li>去中心化应用产品模块</li>
+                                <li>公链产品模块</li>
+                                <li>中心化交易所产品模块</li>
+                                <li>Web3 数据平台产品模块</li>
+                                <li>代币经济模型</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- 分隔线 -->
+                    <div class="divider"></div>
+
+                    <!-- 右侧：实战应用 -->
+                    <div class="overview-section">
+                        <div class="overview-card">
+                            <h3>2. 测试开发实战</h3>
+                            <ul>
+                                <li>以太坊智能合约测试</li>
+                                <li>工具篇使用指南</li>
+                                <li>基础实战项目</li>
+                                <li>企业级项目实战</li>
+                                <li>多链生态测试</li>
+                                <li>性能与压力测试</li>
+                                <li>CI/CD 集成部署</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 幻灯片2: Web3产品业务流程 - 第一部分 -->
+        <div class="slide" id="slide2">
+            <div class="slide-content">
+                <h2>1. 熟悉 Web3 产品业务流程（第一部分）</h2>
+                
+                <div class="detail-grid">
+                    <!-- 第一列：区块链基础知识 -->
+                    <div class="detail-section">
+                        <h3>1.1 区块链基础知识</h3>
+                        <ul>
+                            <li>什么是区块链，区块链特性分析</li>
+                            <li>区块链常用的名词解释</li>
+                            <li>区块链的发展历史分析</li>
+                            <li>全面解析区块链共识算法</li>
+                            <li>联盟链，公链，跨链，链抽象</li>
+                            <li>区块，账户，交易等组成结构</li>
+                            <li>区块链基础密码学理论</li>
+                            <li>区块链的基本数据结构解析</li>
+                            <li>Token、钱包、智能合约、NFT 和 DeFi 解析</li>
+                            <li>L1、L2 和 L3 链的基本结构分析</li>
+                        </ul>
+                    </div>
+
+                    <!-- 分隔线 -->
+                    <div class="divider"></div>
+
+                    <!-- 第二列：钱包产品模块 -->
+                    <div class="detail-section">
+                        <h3>1.2 钱包产品课程模块</h3>
+                        <ul>
+                            <li>不同种类型的钱包的密钥的管理机制</li>
+                            <li>中心化钱包（交易所钱包）底层业务逻辑</li>
+                            <li>去中心化钱包（HD 钱包）功能模块和底层实现</li>
+                            <li>基于 CloudHSM 的托管钱包底层实现与业务逻辑</li>
+                            <li>基于 MPC 的托管钱包底层实现与业务逻辑</li>
+                            <li>硬件钱包底层实现与产品设计</li>
+                            <li>Gnosis Safe 多签钱包产品分析</li>
+                            <li>抽象账户（AA）钱包底层业务逻辑</li>
+                            <li>DappLink 一键发钱包产品全面解析</li>
+                            <li>DappLink 一键发 MPC 托管系统全面解析</li>
+                        </ul>
+                    </div>
+
+                    <!-- 分隔线 -->
+                    <div class="divider"></div>
+
+                    <!-- 第三列：去中心化应用模块 -->
+                    <div class="detail-section">
+                        <h3>1.3 去中心化应用产品模块</h3>
+                        <ul>
+                            <li>去中心化交易所(Uniswap v1-V4)产品底层实现分析</li>
+                            <li>去中心化衍生品交易所(DyDx)产品实现分析</li>
+                            <li>聚合流动性平台 1Inch 产品底层逻辑分析</li>
+                            <li>质押借贷产品(Compound)底层逻辑分析</li>
+                            <li>NFT 交易平台底层逻辑分析</li>
+                            <li>LST/LSD 产品业务流分析</li>
+                            <li>重新质押协议与知名项目分析</li>
+                            <li>深入剖析 DappLink 一键发去中心化可组合的应用</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 幻灯片3: Web3产品业务流程 - 第二部分 -->
+        <div class="slide" id="slide3">
+            <div class="slide-content">
+                <h2>1. 熟悉 Web3 产品业务流程（第二部分）</h2>
+                
+                <div class="detail-grid">
+                    <!-- 第一列：公链产品模块 -->
+                    <div class="detail-section">
+                        <h3>1.4 公链产品模块</h3>
+                        <ul>
+                            <li>公链代表项目(Bitcoin, Ethereum, Solana 和 Cosmos)底层实现及其生态分析</li>
+                            <li>Layer2 代表项目(OpStack 和 PolygonZkevm)底层实现分析</li>
+                            <li>DA 代表项目(EigenDA, Celestia)底层实现分析</li>
+                            <li>知名项目官方跨链桥业务流分析</li>
+                            <li>公链水龙头，浏览器和治理系统</li>
+                            <li>深入剖析 DappLink 一键发链产品实现机制</li>
+                            <li>深入剖析 DappLink CCIP 底层实现机制</li>
+                        </ul>
+                    </div>
+
+                    <!-- 分隔线 -->
+                    <div class="divider"></div>
+
+                    <!-- 第二列：中心化交易所模块 -->
+                    <div class="detail-section">
+                        <h3>1.5 中心化交易所产品模块</h3>
+                        <ul>
+                            <li>KYC 产品业务流分析</li>
+                            <li>交易系统撮合引擎底层实现逻辑</li>
+                            <li>撮合引擎里面的订单管理和匹配策略</li>
+                            <li>交易所统一账户与经典账户产品业务流分析</li>
+                            <li>现货交易产品业务流分析</li>
+                            <li>杠杆交易产品业务流分析</li>
+                            <li>合约交易产品业务流分析</li>
+                            <li>一笔交易在交易所里面的生命周期</li>
+                            <li>期权产品业务流分析</li>
+                            <li>做市商产品业务流分析</li>
+                            <li>OTC 产品业务流分析</li>
+                            <li>量化交易产品业务流分析</li>
+                            <li>Staking 理财产品业务流分析</li>
+                        </ul>
+                    </div>
+
+                    <!-- 分隔线 -->
+                    <div class="divider"></div>
+
+                    <!-- 第三列：数据平台与经济模型 -->
+                    <div class="detail-section">
+                        <h3>1.6 Web3 数据平台产品模块</h3>
+                        <ul>
+                            <li>数据分析平台底层实现</li>
+                            <li>业务监控平台底层实现</li>
+                            <li>数字货币追踪系统底层实现</li>
+                            <li>交易所风控平台底层实现</li>
+                        </ul>
+
+                        <h3 style="margin-top: 30px;">1.7 代币经济模型</h3>
+                        <ul>
+                            <li>代币经济模型设计原则</li>
+                            <li>知名项目经济模型成王败寇分析</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 幻灯片4: 测试开发实战 - 第一部分 -->
+        <div class="slide" id="slide4">
+            <div class="slide-content">
+                <h2>2. 测试开发实战（第一部分）</h2>
+                
+                <!-- 左侧列表区域 -->
+                <div style="display: flex; gap: 50px; margin-top: 30px; margin-bottom: 40px; max-width: 1400px; margin-left: auto; margin-right: auto;">
+                    <!-- 左侧：主要内容列表 -->
+                    <div style="flex: 1; max-width: 400px;">
+                        <h3 style="color: #00ff88; font-size: 1.5rem; font-weight: 600; margin-bottom: 20px; border-bottom: 2px solid #00ff88; padding-bottom: 8px;">2.1 以太坊智能合约基础</h3>
+                        
+                        <div style="margin-bottom: 25px;">
+                            <h4 style="color: #0088ff; font-size: 1.1rem; font-weight: 600; margin-bottom: 12px;">开发环境与基础</h4>
+                            <ul style="list-style: none; padding: 0; text-align: left;">
+                                <li style="color: #e0e0e0; margin-bottom: 8px; padding-left: 20px; position: relative; font-size: 0.9rem; line-height: 1.4;">
+                                    <span style="position: absolute; left: 0; color: #00ff88; font-weight: bold;">•</span>
+                                    Remix 初体验与使用
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 8px; padding-left: 20px; position: relative; font-size: 0.9rem; line-height: 1.4;">
+                                    <span style="position: absolute; left: 0; color: #00ff88; font-weight: bold;">•</span>
+                                    以太坊交易类型讲解
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div>
+                            <h4 style="color: #0088ff; font-size: 1.3rem; font-weight: 600; margin-bottom: 15px;">Solidity 语言基础</h4>
+                            
+                            <!-- Solidity基础项目组件框 -->
+                            <div style="display: grid; grid-template-columns: 1fr; gap: 12px; margin-bottom: 30px;">
+                                <div class="component-box" style="min-height: 50px; padding: 12px;">
+                                    <div class="component-title" style="font-size: 0.9rem;">合约文件结构</div>
+                                </div>
+                                <div class="component-box" style="min-height: 50px; padding: 12px;">
+                                    <div class="component-title" style="font-size: 0.9rem;">合约定义</div>
+                                </div>
+                                <div class="component-box" style="min-height: 70px; padding: 12px;">
+                                    <div class="component-title" style="font-size: 0.9rem;">数据类型
+                                        <div style="font-size: 0.75rem; margin-top: 5px; opacity: 0.8;">值类型 • 引用类型</div>
+                                    </div>
+                                </div>
+                                <div class="component-box" style="min-height: 50px; padding: 12px;">
+                                    <div class="component-title" style="font-size: 0.9rem;">循环分支控制</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 右侧：组件框布局 -->
+                    <div style="flex: 1; display: grid; grid-template-columns: 1fr 1fr; gap: 25px; align-content: start; margin-bottom: 30px;">
+                        <!-- 第一行 -->
+                        <div class="component-box">
+                            <div class="component-title">循环分支控制</div>
+                        </div>
+                        <div class="component-box">
+                            <div class="component-title">函数</div>
+                        </div>
+
+                        <!-- 第二行 -->
+                        <div class="component-box">
+                            <div class="component-title">事件</div>
+                        </div>
+                        <div class="component-box">
+                            <div class="component-title">结构体和枚举</div>
+                        </div>
+
+                        <!-- 第三行 -->
+                        <div class="component-box">
+                            <div class="component-title">继承</div>
+                        </div>
+                        <div class="component-box">
+                            <div class="component-title">异常处理</div>
+                        </div>
+
+                        <!-- 第四行：抽象合约与接口 -->
+                        <div class="component-box" style="grid-column: 1 / -1; margin-bottom: 20px;">
+                            <div class="component-title">抽象合约与接口</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 幻灯片5: 测试开发实战 - 第二部分 -->
+        <div class="slide" id="slide5">
+            <div class="slide-content">
+                <h2>2. 测试开发实战（第二部分）</h2>
+                
+                <div class="detail-grid">
+                    <!-- 第一列：基础实战 -->
+                    <div class="detail-section">
+                        <h3>2.3 基础实战</h3>
+                        <h4>智能合约测试框架</h4>
+                        <ul>
+                            <li>如何基于 Hardhat 编写合约测试脚本</li>
+                            <li>如何基于 Foundry 编写合约测试脚本</li>
+                            <li>基于 Hardhat 和 Foundry ERC20 和 ERC721 测试脚本编写实战</li>
+                        </ul>
+
+                        <h4>安全测试</h4>
+                        <ul>
+                            <li>常见的合约漏洞仿真与 POC 实战</li>
+                        </ul>
+
+                        <h4>钱包功能测试</h4>
+                        <ul>
+                            <li>HD 钱包生成助记词，生成地址，转账，闪兑，dapp 容器，token 自动发现等功能测试</li>
+                            <li>Solana, Ton 生态代币和 NFT 合约测试用例编写实战</li>
+                        </ul>
+                    </div>
+
+                    <!-- 分隔线 -->
+                    <div class="divider"></div>
+
+                    <!-- 第二列：项目实战 - 交易所系统 -->
+                    <div class="detail-section">
+                        <h3>2.4 项目实战（交易所系统）</h3>
+                        <h4>钱包系统测试</h4>
+                        <ul>
+                            <li>交易所钱包充值，提现，归集，热转冷，冷转热等功能测试</li>
+                            <li>交易所钱包离线签名机测试</li>
+                        </ul>
+
+                        <h4>系统联合测试</h4>
+                        <ul>
+                            <li>交易钱包联合业务层，财务，风控系统模拟测试</li>
+                            <li>资金管理系统测试</li>
+                            <li>钱包，资管，财务，风控等系统联合模拟测试实战</li>
+                        </ul>
+                    </div>
+
+                    <!-- 分隔线 -->
+                    <div class="divider"></div>
+
+                    <!-- 第三列：项目实战 - DeFi协议 -->
+                    <div class="detail-section">
+                        <h3>项目实战（DeFi协议）</h3>
+                        <h4>DappLink 项目测试</h4>
+                        <ul>
+                            <li>DappLink bridge 项目测试脚本编写实战</li>
+                            <li>DappLink linklayer 多重质押协议(含跨链和 LSD 质押)脚本编写实战</li>
+                            <li>DappLink Rollup as services 单元测试和 e2e 测试脚本编写实战</li>
+                        </ul>
+
+                        <h4>知名协议测试</h4>
+                        <ul>
+                            <li>仿 Uniswap, DyDx 项目测试脚本编写实战</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 幻灯片6: 测试开发实战 - 第三部分 -->
+        <div class="slide" id="slide6">
+            <div class="slide-content">
+                <h2>2. 测试开发实战（第三部分）</h2>
+                
+                <div class="detail-grid">
+                    <!-- 第一列：Layer2 测试 -->
+                    <div class="detail-section">
+                        <h3>Layer2 生态测试</h3>
+                        <h4>跨链测试</h4>
+                        <ul>
+                            <li>Op, Polygon, Linea 和 Scroll 等 Layer2 项目跨链测试实战</li>
+                        </ul>
+
+                        <h4>项目源码测试分析</h4>
+                        <ul>
+                            <li>Op-stack 项目单元测试和 e2e 测试分析</li>
+                            <li>PolygonZkevm 项目单元测试与 e2e 测试分析</li>
+                        </ul>
+
+                        <h4>生态组件测试</h4>
+                        <ul>
+                            <li>公链中的浏览器，桥，水龙头，桌面钱包等项目业务介绍与测试实战</li>
+                        </ul>
+                    </div>
+
+                    <!-- 分隔线 -->
+                    <div class="divider"></div>
+
+                    <!-- 第二列：性能测试 -->
+                    <div class="detail-section">
+                        <h3>性能与压力测试</h3>
+                        <h4>网络性能测试</h4>
+                        <ul>
+                            <li>本地启动以太坊网络，OP 网络进行 TPS 和 QPS 测试实战</li>
+                        </ul>
+
+                        <h4>CI/CD 集成</h4>
+                        <ul>
+                            <li>在 GitHub 中通过 CI/CD 集成自动化测试</li>
+                            <li>项目上线流程自动化脚本实战</li>
+                        </ul>
+                    </div>
+
+                    <!-- 分隔线 -->
+                    <div class="divider"></div>
+
+                    <!-- 第三列：课程特色 -->
+                    <div class="detail-section">
+                        <h3>课程特色与优势</h3>
+                        <ul>
+                            <li>理论与实战并重</li>
+                            <li>企业级项目经验</li>
+                            <li>多链生态覆盖</li>
+                            <li>性能测试专精</li>
+                            <li>自动化测试集成</li>
+                            <li>数据驱动测试</li>
+                            <li>安全测试重点</li>
+                            <li>前沿技术跟进</li>
+                        </ul>
+
+                        <h4 style="margin-top: 25px; color: #ffaa00;">学习成果</h4>
+                        <ul>
+                            <li>掌握完整的区块链测试开发技能栈</li>
+                            <li>具备企业级项目测试经验</li>
+                            <li>能够独立设计和实施测试方案</li>
+                            <li>深入理解Web3产品业务逻辑</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 幻灯片7: 课程总结 -->
+        <div class="slide" id="slide7">
+            <div class="slide-content">
+                <h1>课程总结</h1>
+                <p class="description">
+                    区块链测试开发课程全面覆盖Web3技术测试栈<br>
+                    从产品业务理解到测试开发实战，从理论学习到项目应用
+                </p>
+                
+                <div class="overview-grid">
+                    <div class="overview-section">
+                        <div class="overview-card">
+                            <h3>核心技能覆盖</h3>
+                            <ul>
+                                <li>Web3产品业务流程深度理解</li>
+                                <li>智能合约测试开发</li>
+                                <li>多链生态测试实战</li>
+                                <li>交易所系统测试</li>
+                                <li>DeFi协议测试分析</li>
+                                <li>性能与安全测试</li>
+                                <li>自动化测试集成</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="divider"></div>
+
+                    <div class="overview-section">
+                        <div class="overview-card">
+                            <h3>实战项目经验</h3>
+                            <ul>
+                                <li>企业级钱包系统测试</li>
+                                <li>DappLink项目测试实战</li>
+                                <li>Layer2跨链测试</li>
+                                <li>DeFi协议测试开发</li>
+                                <li>性能压力测试实施</li>
+                                <li>CI/CD自动化部署</li>
+                                <li>安全漏洞POC实战</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="text-align: center; margin-top: 50px; font-size: 1.2rem; color: #00ff88;">
+                    🚀 开启您的区块链测试开发专业之旅！
+                </div>
+
+                <div style="text-align: center; margin-top: 40px;">
+                    <button onclick="this.style.transform='scale(0.98)'; setTimeout(() => window.location.href='index.html', 100)" style="
+                        background: linear-gradient(135deg, rgba(0, 255, 136, 0.2), rgba(0, 136, 255, 0.2));
+                        border: 2px solid #00ff88;
+                        border-radius: 12px;
+                        padding: 15px 30px;
+                        color: #ffffff;
+                        font-size: 1rem;
+                        font-weight: 600;
+                        cursor: pointer;
+                        transition: all 0.15s ease;
+                        backdrop-filter: blur(10px);
+                        position: relative;
+                        overflow: hidden;
+                        user-select: none;
+                        -webkit-tap-highlight-color: transparent;
+                    " onmouseover="this.style.transform='translateY(-2px) scale(1.02)'; this.style.boxShadow='0 10px 20px rgba(0, 255, 136, 0.3)'; this.style.borderColor='rgba(0, 255, 136, 0.8)'" onmouseout="this.style.transform='translateY(0) scale(1)'; this.style.boxShadow='none'; this.style.borderColor='#00ff88'" onmousedown="this.style.transform='scale(0.98)'" onmouseup="this.style.transform='translateY(-2px) scale(1.02)'">
+                        ← 返回课程主页
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 导航控制 -->
+    <div class="slide-nav" id="slideNav"></div>
+    
+    <!-- 箭头导航 -->
+    <div class="slide-arrow arrow-prev" onclick="prevSlide()">‹</div>
+    <div class="slide-arrow arrow-next" onclick="nextSlide()">›</div>
+
+    <script>
+        // 创建粒子背景
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            const particleCount = 50;
+
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 6 + 's';
+                particle.style.animationDuration = (Math.random() * 3 + 3) + 's';
+                particlesContainer.appendChild(particle);
+            }
+        }
+
+        // 幻灯片控制
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const slideCount = slides.length;
+
+        function createNavDots() {
+            const navContainer = document.getElementById('slideNav');
+            for (let i = 0; i < slideCount; i++) {
+                const dot = document.createElement('div');
+                dot.className = 'nav-dot';
+                if (i === 0) dot.classList.add('active');
+                dot.addEventListener('click', () => goToSlide(i));
+                navContainer.appendChild(dot);
+            }
+        }
+
+        function updateNavDots() {
+            const dots = document.querySelectorAll('.nav-dot');
+            dots.forEach((dot, index) => {
+                dot.classList.toggle('active', index === currentSlide);
+            });
+        }
+
+        function showSlide(index) {
+            slides.forEach((slide, i) => {
+                slide.classList.remove('active', 'prev');
+                if (i === index) {
+                    slide.classList.add('active');
+                } else if (i < index) {
+                    slide.classList.add('prev');
+                }
+            });
+            updateNavDots();
+        }
+
+        function nextSlide() {
+            currentSlide = (currentSlide + 1) % slideCount;
+            showSlide(currentSlide);
+        }
+
+        function prevSlide() {
+            currentSlide = (currentSlide - 1 + slideCount) % slideCount;
+            showSlide(currentSlide);
+        }
+
+        function goToSlide(index) {
+            currentSlide = index;
+            showSlide(currentSlide);
+        }
+
+        // 键盘控制
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === ' ') {
+                nextSlide();
+            } else if (e.key === 'ArrowLeft') {
+                prevSlide();
+            }
+        });
+
+        // 触摸滑动支持
+        let touchStartX = 0;
+        let touchEndX = 0;
+
+        document.addEventListener('touchstart', (e) => {
+            touchStartX = e.changedTouches[0].screenX;
+        });
+
+        document.addEventListener('touchend', (e) => {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        });
+
+        function handleSwipe() {
+            const swipeThreshold = 50;
+            const diff = touchStartX - touchEndX;
+            
+            if (Math.abs(diff) > swipeThreshold) {
+                if (diff > 0) {
+                    nextSlide();
+                } else {
+                    prevSlide();
+                }
+            }
+        }
+
+        // 初始化
+        document.addEventListener('DOMContentLoaded', () => {
+            createParticles();
+            createNavDots();
+        });
+    </script>
+</body>
+</html>

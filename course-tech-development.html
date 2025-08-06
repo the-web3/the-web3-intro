@@ -1,0 +1,2888 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TheWeb3 技术开发课程详细大纲</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a2332 25%, #0d4f3c 50%, #1a2332 75%, #0a0a0a 100%);
+            color: #ffffff;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        .container {
+            position: relative;
+            width: 100%;
+            min-height: 100vh;
+        }
+
+        /* 背景动画粒子 */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: linear-gradient(45deg, #00ff88, #0088ff);
+            border-radius: 50%;
+            animation: float 6s infinite linear;
+            opacity: 0.7;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.7;
+            }
+            90% {
+                opacity: 0.7;
+            }
+            100% {
+                transform: translateY(-100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* 幻灯片容器 */
+        .slide-container {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            overflow: visible;
+        }
+
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            opacity: 0;
+            transform: translateX(100%);
+            transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            padding: 60px 30px 80px;
+            z-index: 10;
+            overflow-y: auto;
+        }
+
+        .slide.active {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .slide.prev {
+            transform: translateX(-100%);
+        }
+
+        .slide-content {
+            max-width: 1400px;
+            width: 100%;
+            text-align: center;
+            animation: slideInUp 1s ease-out;
+            padding-top: 20px;
+        }
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* 标题样式 */
+        .slide h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, #00ff88, #0088ff, #9966ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 30px;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        .slide h2 {
+            font-size: 2.5rem;
+            font-weight: 600;
+            background: linear-gradient(45deg, #ffaa00, #00ff88);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 40px;
+        }
+
+        @keyframes glow {
+            from {
+                text-shadow: 0 0 20px rgba(0, 255, 136, 0.5);
+            }
+            to {
+                text-shadow: 0 0 30px rgba(0, 136, 255, 0.8);
+            }
+        }
+
+        /* 描述文字 */
+        .description {
+            font-size: 1.2rem;
+            line-height: 1.8;
+            margin-bottom: 40px;
+            color: #e0e0e0;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* 课程模块容器 */
+        .curriculum-container {
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(0, 255, 136, 0.3);
+            border-radius: 15px;
+            padding: 25px;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 20px;
+            min-height: auto;
+            height: auto;
+        }
+
+        .curriculum-container:hover {
+            border-color: rgba(0, 255, 136, 0.6);
+            box-shadow: 0 15px 30px rgba(0, 255, 136, 0.2);
+            transform: translateY(-5px);
+        }
+
+        .curriculum-container::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(0, 255, 136, 0.1), transparent);
+            transform: rotate(45deg);
+            transition: all 0.5s ease;
+            opacity: 0;
+        }
+
+        .curriculum-container:hover::before {
+            opacity: 1;
+            transform: rotate(45deg) translate(50%, 50%);
+        }
+
+        .stage-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, #00ff88, #0088ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 2;
+            text-align: center;
+        }
+
+        .section-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: #0088ff;
+            margin-bottom: 15px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .topic-list {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            position: relative;
+            z-index: 2;
+            text-align: left;
+        }
+
+        .topic-item {
+            font-size: 1rem;
+            color: #e0e0e0;
+            margin-bottom: 8px;
+            padding: 5px 0;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .topic-item::before {
+            content: '•';
+            color: #00ff88;
+            font-weight: bold;
+            margin-right: 10px;
+            font-size: 1.1rem;
+        }
+
+        .topic-item:hover {
+            color: #ffffff;
+            transform: translateX(5px);
+        }
+
+        .sub-topic {
+            margin-left: 20px;
+            font-size: 0.9rem;
+            color: #cccccc;
+        }
+
+        .sub-topic::before {
+            content: '◦';
+            color: #0088ff;
+            margin-right: 8px;
+        }
+
+        /* 网格布局 */
+        .course-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+            gap: 25px;
+            margin: 30px 0;
+            align-items: start;
+        }
+
+        .course-grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 25px;
+            margin: 30px 0;
+            align-items: start;
+        }
+
+        .course-grid-2 {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 25px;
+            margin: 30px 0;
+            align-items: start;
+        }
+
+        /* 单列布局 */
+        .single-column {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        /* 第一页新布局特殊样式 - 线条分区版 */
+        #slide1 .slide-content > div {
+            display: grid;
+            grid-template-columns: 1fr 2px 1fr 2px 1fr 2px 1fr;
+            gap: 30px;
+            margin-top: 50px;
+            max-width: 1400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        #slide1 .slide-content > div > div:nth-child(odd) {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            align-items: stretch;
+        }
+
+        #slide1 .slide-content > div > div:nth-child(even) {
+            background: linear-gradient(to bottom, transparent, #00ff88, #0088ff, transparent);
+            opacity: 0.6;
+        }
+
+        /* 第一页移动端优化 */
+        @media (max-width: 768px) {
+            #slide1 .slide-content > div {
+                grid-template-columns: 1fr !important;
+                gap: 20px !important;
+                margin-top: 30px !important;
+            }
+
+            #slide1 .slide-content > div > div:nth-child(even) {
+                display: none !important;
+            }
+
+            #slide1 .slide-content > div > div:nth-child(odd) {
+                gap: 15px !important;
+                margin-bottom: 25px !important;
+                padding: 0 !important;
+            }
+
+            #slide1 h3 {
+                font-size: 1.4rem !important;
+                margin-bottom: 18px !important;
+            }
+
+            #slide1 h4 {
+                font-size: 1.1rem !important;
+                margin-bottom: 15px !important;
+            }
+
+            #slide1 ul li {
+                font-size: 0.9rem !important;
+                margin-bottom: 10px !important;
+                line-height: 1.4 !important;
+            }
+        }
+
+        @media (max-width: 480px) {
+            #slide1 .slide-content > div {
+                grid-template-columns: 1fr !important;
+                gap: 15px !important;
+                margin-top: 25px !important;
+            }
+
+            #slide1 .slide-content > div > div:nth-child(even) {
+                display: none !important;
+            }
+
+            #slide1 .slide-content > div > div:nth-child(odd) {
+                gap: 12px !important;
+                margin-bottom: 20px !important;
+                padding: 0 !important;
+            }
+
+            #slide1 h3 {
+                font-size: 1.3rem !important;
+                margin-bottom: 15px !important;
+                padding-bottom: 8px !important;
+            }
+
+            #slide1 h4 {
+                font-size: 1rem !important;
+                margin-bottom: 12px !important;
+            }
+
+            #slide1 ul li {
+                font-size: 0.85rem !important;
+                margin-bottom: 8px !important;
+                line-height: 1.3 !important;
+                padding-left: 18px !important;
+            }
+
+            #slide1 ul li span {
+                font-size: 1rem !important;
+            }
+        }
+
+        /* 第三阶段新布局特殊样式 - 五列线条分区 */
+        #slide4 .slide-content > div {
+            display: grid;
+            grid-template-columns: 1fr 2px 1fr 2px 1fr 2px 1fr 2px 1fr;
+            gap: 20px;
+            margin-top: 40px;
+            max-width: 1800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        #slide4 .slide-content > div > div:nth-child(odd) {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            align-items: stretch;
+        }
+
+        #slide4 .slide-content > div > div:nth-child(even) {
+            background: linear-gradient(to bottom, transparent, #00ff88, #0088ff, transparent);
+            opacity: 0.6;
+        }
+
+        /* 第二阶段新布局特殊样式 - 四列线条分区 */
+        #slide3 .slide-content > div {
+            display: grid;
+            grid-template-columns: 1fr 2px 1fr 2px 1fr 2px 1fr;
+            gap: 25px;
+            margin-top: 40px;
+            max-width: 1600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        #slide3 .slide-content > div > div:nth-child(odd) {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            align-items: stretch;
+        }
+
+        #slide3 .slide-content > div > div:nth-child(even) {
+            background: linear-gradient(to bottom, transparent, #00ff88, #0088ff, transparent);
+            opacity: 0.6;
+        }
+
+        /* 第四、五阶段新布局特殊样式 - 线条分区版 */
+        #slide5 .slide-content > div {
+            display: grid;
+            grid-template-columns: 1fr 2px 1fr 2px 1fr;
+            gap: 25px;
+            margin-top: 40px;
+            max-width: 1500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        #slide5 .slide-content > div > div:nth-child(odd) {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            align-items: stretch;
+        }
+
+        #slide5 .slide-content > div > div:nth-child(even) {
+            background: linear-gradient(to bottom, transparent, #00ff88, #0088ff, transparent);
+            opacity: 0.6;
+        }
+
+        #slide6 .slide-content > div {
+            display: grid;
+            grid-template-columns: 1fr 2px 1fr 2px 1fr 2px 1fr;
+            gap: 20px;
+            margin-top: 40px;
+            max-width: 1600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        #slide6 .slide-content > div > div:nth-child(odd) {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            align-items: stretch;
+        }
+
+        #slide6 .slide-content > div > div:nth-child(even) {
+            background: linear-gradient(to bottom, transparent, #00ff88, #0088ff, transparent);
+            opacity: 0.6;
+        }
+        #slide2 .course-grid-3 > div {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            align-items: stretch;
+        }
+
+        #slide2 .curriculum-container {
+            flex: 1;
+            min-height: auto;
+            height: auto;
+            padding: 20px;
+        }
+
+        /* 针对第一阶段的紧凑布局 */
+        #slide2 .section-title {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+        }
+
+        #slide2 .topic-item {
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+            line-height: 1.4;
+        }
+
+        #slide2 .sub-topic {
+            font-size: 0.8rem;
+            line-height: 1.3;
+            margin-bottom: 2px;
+        }
+
+        /* 确保子主题有适当缩进 */
+        .sub-topic {
+            margin-left: 25px;
+            font-size: 0.85rem;
+            color: #cccccc;
+            margin-bottom: 3px;
+        }
+
+        /* 导航控制 - 隐藏圆点导航 */
+        .slide-nav {
+            display: none;
+        }
+
+        /* 箭头导航 */
+        .slide-arrow {
+            position: fixed;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 50px;
+            height: 50px;
+            background: rgba(0, 255, 136, 0.2);
+            border: 2px solid rgba(0, 255, 136, 0.5);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 1000;
+            color: #ffffff;
+            font-size: 16px;
+        }
+
+        .slide-arrow:hover {
+            background: rgba(0, 255, 136, 0.4);
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .arrow-prev {
+            left: 30px;
+        }
+
+        .arrow-next {
+            right: 30px;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .slide h1 {
+                font-size: 2.5rem;
+            }
+            
+            .slide h2 {
+                font-size: 2rem;
+            }
+            
+            .description {
+                font-size: 1rem;
+            }
+            
+            .slide {
+                padding: 40px 15px 80px;
+            }
+
+            .course-grid,
+            .course-grid-3 {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .course-grid-2 {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .curriculum-container {
+                padding: 20px;
+                margin-bottom: 15px;
+                min-height: auto;
+                height: auto;
+            }
+
+            .stage-title {
+                font-size: 1.4rem;
+                margin-bottom: 15px;
+            }
+
+            .section-title {
+                font-size: 1.2rem;
+                margin-bottom: 12px;
+            }
+
+            .topic-item {
+                font-size: 0.9rem;
+                line-height: 1.5;
+                margin-bottom: 6px;
+            }
+
+            .sub-topic {
+                font-size: 0.85rem;
+                line-height: 1.4;
+                margin-bottom: 4px;
+            }
+
+            /* 第一页移动端优化 */
+            #slide1 .course-grid-2 {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            #slide1 .curriculum-container {
+                min-height: auto;
+                height: auto;
+            }
+
+            /* 第三阶段新布局移动端优化 - 五列变单列 */
+            #slide4 .slide-content > div {
+                grid-template-columns: 1fr !important;
+                gap: 15px !important;
+            }
+
+            #slide4 .slide-content > div > div:nth-child(even) {
+                display: none !important;
+            }
+
+            #slide4 .slide-content > div > div:nth-child(odd) {
+                gap: 12px !important;
+                margin-bottom: 20px !important;
+            }
+
+            #slide4 h3 {
+                font-size: 1.1rem !important;
+                margin-bottom: 10px !important;
+            }
+
+            #slide4 ul li {
+                font-size: 0.8rem !important;
+                margin-bottom: 4px !important;
+                line-height: 1.2 !important;
+            }
+
+            /* 第二阶段新布局移动端优化 - 四列变单列 */
+            #slide3 .slide-content > div {
+                grid-template-columns: 1fr !important;
+                gap: 15px !important;
+            }
+
+            #slide3 .slide-content > div > div:nth-child(even) {
+                display: none !important;
+            }
+
+            #slide3 .slide-content > div > div:nth-child(odd) {
+                gap: 12px !important;
+                margin-bottom: 20px !important;
+            }
+
+            #slide3 h3 {
+                font-size: 1.2rem !important;
+                margin-bottom: 12px !important;
+            }
+
+            #slide3 ul li {
+                font-size: 0.85rem !important;
+                margin-bottom: 6px !important;
+                line-height: 1.3 !important;
+            }
+
+            /* 第四阶段新布局移动端优化 - 第一页 */
+            #slide5 .slide-content > div {
+                grid-template-columns: 1fr !important;
+                gap: 15px !important;
+            }
+
+            #slide5 .slide-content > div > div:nth-child(even) {
+                display: none !important;
+            }
+
+            #slide5 .slide-content > div > div:nth-child(odd) {
+                gap: 12px !important;
+                margin-bottom: 20px !important;
+            }
+
+            #slide5 h3 {
+                font-size: 1.2rem !important;
+                margin-bottom: 12px !important;
+            }
+
+            #slide5 h4 {
+                font-size: 1rem !important;
+                margin-bottom: 8px !important;
+            }
+
+            #slide5 ul li {
+                font-size: 0.85rem !important;
+                margin-bottom: 6px !important;
+                line-height: 1.3 !important;
+            }
+
+            /* 第四阶段新布局移动端优化 - 第二页 */
+            #slide6 .slide-content > div {
+                grid-template-columns: 1fr !important;
+                gap: 15px !important;
+            }
+
+            #slide6 .slide-content > div > div:nth-child(even) {
+                display: none !important;
+            }
+
+            #slide6 .slide-content > div > div:nth-child(odd) {
+                gap: 12px !important;
+                margin-bottom: 20px !important;
+            }
+
+            #slide6 h3 {
+                font-size: 1.2rem !important;
+                margin-bottom: 12px !important;
+            }
+
+            #slide6 h4 {
+                font-size: 1rem !important;
+                margin-bottom: 8px !important;
+            }
+
+            #slide6 ul li {
+                font-size: 0.85rem !important;
+                margin-bottom: 6px !important;
+                line-height: 1.3 !important;
+            }
+            #slide2 .course-grid-3 {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+
+            #slide2 .course-grid-3 > div {
+                gap: 12px;
+            }
+
+            #slide2 .curriculum-container {
+                padding: 15px;
+            }
+
+            #slide2 .section-title {
+                font-size: 1.1rem;
+                margin-bottom: 8px;
+            }
+
+            #slide2 .topic-item {
+                font-size: 0.85rem;
+                margin-bottom: 4px;
+            }
+
+            #slide2 .sub-topic {
+                font-size: 0.75rem;
+                margin-bottom: 2px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .slide {
+                padding: 30px 10px 70px;
+            }
+
+            .slide h1 {
+                font-size: 2rem;
+                margin-bottom: 20px;
+            }
+            
+            .slide h2 {
+                font-size: 1.8rem;
+                margin-bottom: 25px;
+            }
+
+            .curriculum-container {
+                padding: 15px;
+                margin-bottom: 12px;
+            }
+
+            .stage-title {
+                font-size: 1.2rem;
+                margin-bottom: 12px;
+            }
+
+            .section-title {
+                font-size: 1.1rem;
+                margin-bottom: 10px;
+            }
+
+            .topic-item {
+                font-size: 0.85rem;
+                line-height: 1.4;
+            }
+
+            .sub-topic {
+                font-size: 0.8rem;
+                line-height: 1.3;
+            }
+
+            /* 第一页小屏幕优化 */
+            #slide1 .course-grid-2 {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+
+            #slide1 .curriculum-container {
+                min-height: auto;
+                height: auto;
+                padding: 15px;
+            }
+
+            /* 第三阶段新布局小屏幕优化 - 五列变单列 */
+            #slide4 .slide-content > div {
+                grid-template-columns: 1fr !important;
+                gap: 12px !important;
+            }
+
+            #slide4 .slide-content > div > div:nth-child(even) {
+                display: none !important;
+            }
+
+            #slide4 .slide-content > div > div:nth-child(odd) {
+                gap: 10px !important;
+                margin-bottom: 15px !important;
+            }
+
+            #slide4 h3 {
+                font-size: 1rem !important;
+                margin-bottom: 8px !important;
+            }
+
+            #slide4 ul li {
+                font-size: 0.75rem !important;
+                margin-bottom: 3px !important;
+                line-height: 1.1 !important;
+            }
+
+            /* 第二阶段新布局小屏幕优化 - 四列变单列 */
+            #slide3 .slide-content > div {
+                grid-template-columns: 1fr !important;
+                gap: 12px !important;
+            }
+
+            #slide3 .slide-content > div > div:nth-child(even) {
+                display: none !important;
+            }
+
+            #slide3 .slide-content > div > div:nth-child(odd) {
+                gap: 10px !important;
+                margin-bottom: 15px !important;
+            }
+
+            #slide3 h3 {
+                font-size: 1.1rem !important;
+                margin-bottom: 10px !important;
+            }
+
+            #slide3 ul li {
+                font-size: 0.8rem !important;
+                margin-bottom: 4px !important;
+                line-height: 1.2 !important;
+            }
+
+            /* 第四阶段新布局小屏幕优化 - 第一页 */
+            #slide5 .slide-content > div {
+                grid-template-columns: 1fr !important;
+                gap: 12px !important;
+            }
+
+            #slide5 .slide-content > div > div:nth-child(even) {
+                display: none !important;
+            }
+
+            #slide5 .slide-content > div > div:nth-child(odd) {
+                gap: 10px !important;
+                margin-bottom: 15px !important;
+            }
+
+            #slide5 h3 {
+                font-size: 1.1rem !important;
+                margin-bottom: 10px !important;
+            }
+
+            #slide5 h4 {
+                font-size: 0.95rem !important;
+                margin-bottom: 6px !important;
+            }
+
+            #slide5 ul li {
+                font-size: 0.8rem !important;
+                margin-bottom: 4px !important;
+                line-height: 1.2 !important;
+            }
+
+            /* 第四阶段新布局小屏幕优化 - 第二页 */
+            #slide6 .slide-content > div {
+                grid-template-columns: 1fr !important;
+                gap: 12px !important;
+            }
+
+            #slide6 .slide-content > div > div:nth-child(even) {
+                display: none !important;
+            }
+
+            #slide6 .slide-content > div > div:nth-child(odd) {
+                gap: 10px !important;
+                margin-bottom: 15px !important;
+            }
+
+            #slide6 h3 {
+                font-size: 1.1rem !important;
+                margin-bottom: 10px !important;
+            }
+
+            #slide6 h4 {
+                font-size: 0.95rem !important;
+                margin-bottom: 6px !important;
+            }
+
+            #slide6 ul li {
+                font-size: 0.8rem !important;
+                margin-bottom: 4px !important;
+                line-height: 1.2 !important;
+            }
+            #slide2 .course-grid-3 {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+
+            #slide2 .course-grid-3 > div {
+                gap: 10px;
+            }
+
+            #slide2 .curriculum-container {
+                padding: 12px;
+            }
+
+            #slide2 .section-title {
+                font-size: 1rem;
+                margin-bottom: 6px;
+            }
+
+            #slide2 .topic-item {
+                font-size: 0.8rem;
+                margin-bottom: 3px;
+                line-height: 1.3;
+            }
+
+            #slide2 .sub-topic {
+                font-size: 0.7rem;
+                margin-bottom: 1px;
+                line-height: 1.2;
+            }
+        }
+
+        /* 导航栏样式 */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(15px);
+            z-index: 1000;
+            padding: 20px 0;
+            border-bottom: 1px solid rgba(0, 255, 136, 0.15);
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+
+        .navbar:hover {
+            background: rgba(0, 0, 0, 0.2);
+            border-bottom-color: rgba(0, 255, 136, 0.3);
+        }
+
+        .nav-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 50px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, #00ff88, #0088ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            filter: drop-shadow(0 0 8px rgba(0, 255, 136, 0.4));
+        }
+
+        .logo:hover {
+            transform: scale(1.05);
+            filter: drop-shadow(0 0 12px rgba(0, 255, 136, 0.8));
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            list-style: none;
+            position: relative;
+        }
+
+        .nav-links a {
+            color: rgba(255, 255, 255, 0.9);
+            text-decoration: none;
+            font-weight: 500;
+            padding: 8px 16px;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+            position: relative;
+            backdrop-filter: blur(5px);
+        }
+
+        .nav-links a:hover {
+            color: #ffffff;
+            background: rgba(0, 255, 136, 0.15);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 255, 136, 0.2);
+            text-shadow: 0 0 8px rgba(0, 255, 136, 0.6);
+        }
+
+        .nav-links a.active {
+            color: #ffffff;
+            background: linear-gradient(135deg, rgba(0, 255, 136, 0.2), rgba(0, 136, 255, 0.2));
+            border: 1px solid rgba(0, 255, 136, 0.4);
+            box-shadow: 0 4px 15px rgba(0, 255, 136, 0.3);
+            text-shadow: 0 0 10px rgba(0, 255, 136, 0.8);
+        }
+
+        .container {
+            padding-top: 80px;
+        }
+
+        /* 移动端响应式 */
+        @media (max-width: 768px) {
+            .nav-content {
+                padding: 0 20px;
+            }
+            
+            .nav-links {
+                gap: 15px;
+            }
+            
+            .nav-links a {
+                font-size: 0.9rem;
+                padding: 6px 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="nav-content">
+            <a href="index.html" class="logo">The Web3 社区</a>
+            <ul class="nav-links">
+                <li><a href="index.html">首页</a></li>
+                <li><a href="course-tech-development.html" class="active">技术课程大纲</a></li>
+                <li><a href="course-product-research.html">产品投研课程</a></li>
+                <li><a href="course-testing-development.html">测试开发课程</a></li>
+            </ul>
+        </div>
+    </nav>
+    <!-- 背景粒子 -->
+    <div class="particles" id="particles"></div>
+
+    <!-- 幻灯片容器 -->
+    <div class="slide-container">
+        <!-- 幻灯片1: 课程总览 -->
+        <div class="slide active" id="slide1">
+            <div class="slide-content">
+                <h1>TheWeb3 技术开发课程</h1>
+                <p class="description">
+                    完整详细的区块链技术开发课程大纲<br>
+                    涵盖区块链基础、智能合约、钱包开发、公链技术四大核心阶段
+                </p>
+                
+                <!-- 使用线条分区的布局 -->
+                <div style="display: grid; grid-template-columns: 1fr 2px 1fr 2px 1fr 2px 1fr; gap: 30px; margin-top: 50px; max-width: 1400px; margin-left: auto; margin-right: auto;">
+                    
+                    <!-- 第一列：第一阶段 -->
+                    <div style="padding-right: 15px;">
+                        <div style="margin-bottom: 30px;">
+                            <h3 style="color: #00ff88; font-size: 1.6rem; font-weight: 600; margin-bottom: 25px; text-align: center; border-bottom: 3px solid #00ff88; padding-bottom: 12px;">第一阶段</h3>
+                            <h4 style="color: #0088ff; font-size: 1.3rem; font-weight: 600; margin-bottom: 20px; text-align: center;">区块链基础知识普及</h4>
+                            <ul style="list-style: none; padding: 0;">
+                                <li style="color: #e0e0e0; margin-bottom: 12px; padding-left: 20px; position: relative; font-size: 1rem; line-height: 1.5;">
+                                    <span style="position: absolute; left: 0; color: #00ff88; font-weight: bold; font-size: 1.2rem;">•</span>
+                                    区块链基础概念与特性
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 12px; padding-left: 20px; position: relative; font-size: 1rem; line-height: 1.5;">
+                                    <span style="position: absolute; left: 0; color: #00ff88; font-weight: bold; font-size: 1.2rem;">•</span>
+                                    密码学原理与数据结构
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 12px; padding-left: 20px; position: relative; font-size: 1rem; line-height: 1.5;">
+                                    <span style="position: absolute; left: 0; color: #00ff88; font-weight: bold; font-size: 1.2rem;">•</span>
+                                    Bitcoin 深度解析
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 12px; padding-left: 20px; position: relative; font-size: 1rem; line-height: 1.5;">
+                                    <span style="position: absolute; left: 0; color: #00ff88; font-weight: bold; font-size: 1.2rem;">•</span>
+                                    Ethereum 生态系统
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 12px; padding-left: 20px; position: relative; font-size: 1rem; line-height: 1.5;">
+                                    <span style="position: absolute; left: 0; color: #00ff88; font-weight: bold; font-size: 1.2rem;">•</span>
+                                    模块化区块链演变
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- 分隔线1 -->
+                    <div style="background: linear-gradient(to bottom, transparent, #00ff88, #0088ff, transparent); opacity: 0.6;"></div>
+
+                    <!-- 第二列：第二阶段 -->
+                    <div style="padding: 0 15px;">
+                        <div style="margin-bottom: 30px;">
+                            <h3 style="color: #0088ff; font-size: 1.6rem; font-weight: 600; margin-bottom: 25px; text-align: center; border-bottom: 3px solid #0088ff; padding-bottom: 12px;">第二阶段</h3>
+                            <h4 style="color: #ffaa00; font-size: 1.3rem; font-weight: 600; margin-bottom: 20px; text-align: center;">智能合约开发实战</h4>
+                            <ul style="list-style: none; padding: 0;">
+                                <li style="color: #e0e0e0; margin-bottom: 12px; padding-left: 20px; position: relative; font-size: 1rem; line-height: 1.5;">
+                                    <span style="position: absolute; left: 0; color: #0088ff; font-weight: bold; font-size: 1.2rem;">•</span>
+                                    Solidity 基础与进阶编程
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 12px; padding-left: 20px; position: relative; font-size: 1rem; line-height: 1.5;">
+                                    <span style="position: absolute; left: 0; color: #0088ff; font-weight: bold; font-size: 1.2rem;">•</span>
+                                    智能合约开发工具
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 12px; padding-left: 20px; position: relative; font-size: 1rem; line-height: 1.5;">
+                                    <span style="position: absolute; left: 0; color: #0088ff; font-weight: bold; font-size: 1.2rem;">•</span>
+                                    项目实战与案例分析
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 12px; padding-left: 20px; position: relative; font-size: 1rem; line-height: 1.5;">
+                                    <span style="position: absolute; left: 0; color: #0088ff; font-weight: bold; font-size: 1.2rem;">•</span>
+                                    DeFi 协议深度解析
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 12px; padding-left: 20px; position: relative; font-size: 1rem; line-height: 1.5;">
+                                    <span style="position: absolute; left: 0; color: #0088ff; font-weight: bold; font-size: 1.2rem;">•</span>
+                                    跨链桥与预言机实战
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- 分隔线2 -->
+                    <div style="background: linear-gradient(to bottom, transparent, #0088ff, #ffaa00, transparent); opacity: 0.6;"></div>
+
+                    <!-- 第三列：第三阶段 -->
+                    <div style="padding: 0 15px;">
+                        <div style="margin-bottom: 30px;">
+                            <h3 style="color: #ffaa00; font-size: 1.6rem; font-weight: 600; margin-bottom: 25px; text-align: center; border-bottom: 3px solid #ffaa00; padding-bottom: 12px;">第三阶段</h3>
+                            <h4 style="color: #9966ff; font-size: 1.3rem; font-weight: 600; margin-bottom: 20px; text-align: center;">钱包技术开发</h4>
+                            <ul style="list-style: none; padding: 0;">
+                                <li style="color: #e0e0e0; margin-bottom: 12px; padding-left: 20px; position: relative; font-size: 1rem; line-height: 1.5;">
+                                    <span style="position: absolute; left: 0; color: #ffaa00; font-weight: bold; font-size: 1.2rem;">•</span>
+                                    钱包基础知识与密码学
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 12px; padding-left: 20px; position: relative; font-size: 1rem; line-height: 1.5;">
+                                    <span style="position: absolute; left: 0; color: #ffaa00; font-weight: bold; font-size: 1.2rem;">•</span>
+                                    HD钱包与多链支持
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 12px; padding-left: 20px; position: relative; font-size: 1rem; line-height: 1.5;">
+                                    <span style="position: absolute; left: 0; color: #ffaa00; font-weight: bold; font-size: 1.2rem;">•</span>
+                                    交易所钱包开发
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 12px; padding-left: 20px; position: relative; font-size: 1rem; line-height: 1.5;">
+                                    <span style="position: absolute; left: 0; color: #ffaa00; font-weight: bold; font-size: 1.2rem;">•</span>
+                                    MPC托管系统实战
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 12px; padding-left: 20px; position: relative; font-size: 1rem; line-height: 1.5;">
+                                    <span style="position: absolute; left: 0; color: #ffaa00; font-weight: bold; font-size: 1.2rem;">•</span>
+                                    去中心化钱包开发
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- 分隔线3 -->
+                    <div style="background: linear-gradient(to bottom, transparent, #ffaa00, #9966ff, transparent); opacity: 0.6;"></div>
+
+                    <!-- 第四列：第四阶段 -->
+                    <div style="padding-left: 15px;">
+                        <div style="margin-bottom: 30px;">
+                            <h3 style="color: #9966ff; font-size: 1.6rem; font-weight: 600; margin-bottom: 25px; text-align: center; border-bottom: 3px solid #9966ff; padding-bottom: 12px;">第四阶段</h3>
+                            <h4 style="color: #00ff88; font-size: 1.3rem; font-weight: 600; margin-bottom: 20px; text-align: center;">公链技术实战</h4>
+                            <ul style="list-style: none; padding: 0;">
+                                <li style="color: #e0e0e0; margin-bottom: 12px; padding-left: 20px; position: relative; font-size: 1rem; line-height: 1.5;">
+                                    <span style="position: absolute; left: 0; color: #9966ff; font-weight: bold; font-size: 1.2rem;">•</span>
+                                    Cosmos 生态开发
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 12px; padding-left: 20px; position: relative; font-size: 1rem; line-height: 1.5;">
+                                    <span style="position: absolute; left: 0; color: #9966ff; font-weight: bold; font-size: 1.2rem;">•</span>
+                                    Layer2 技术深度解析
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 12px; padding-left: 20px; position: relative; font-size: 1rem; line-height: 1.5;">
+                                    <span style="position: absolute; left: 0; color: #9966ff; font-weight: bold; font-size: 1.2rem;">•</span>
+                                    应用链构建实战
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 12px; padding-left: 20px; position: relative; font-size: 1rem; line-height: 1.5;">
+                                    <span style="position: absolute; left: 0; color: #9966ff; font-weight: bold; font-size: 1.2rem;">•</span>
+                                    跨链通信协议
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 12px; padding-left: 20px; position: relative; font-size: 1rem; line-height: 1.5;">
+                                    <span style="position: absolute; left: 0; color: #9966ff; font-weight: bold; font-size: 1.2rem;">•</span>
+                                    模块化区块链架构
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 幻灯片2: 第一阶段 - 区块链基础知识普及（线条分区版） -->
+        <div class="slide" id="slide2">
+            <div class="slide-content">
+                <h2>第一阶段：区块链基础知识普及</h2>
+                
+                <!-- 使用线条分区的布局 -->
+                <div style="display: grid; grid-template-columns: 1fr 2px 1fr 2px 1fr; gap: 30px; margin-top: 40px; max-width: 1400px; margin-left: auto; margin-right: auto;">
+                    
+                    <!-- 第一列：基础知识 -->
+                    <div style="padding-right: 15px;">
+                        <!-- 区块链基础概念 -->
+                        <div style="margin-bottom: 40px;">
+                            <h3 style="color: #00ff88; font-size: 1.4rem; font-weight: 600; margin-bottom: 20px; text-align: center; border-bottom: 2px solid #00ff88; padding-bottom: 10px;">区块链基础概念</h3>
+                            <ul style="list-style: none; padding: 0;">
+                                <li style="color: #e0e0e0; margin-bottom: 12px; padding-left: 20px; position: relative; font-size: 0.95rem; line-height: 1.5;">
+                                    <span style="position: absolute; left: 0; color: #00ff88; font-weight: bold;">•</span>
+                                    什么是区块链，区块链的特性分析
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 12px; padding-left: 20px; position: relative; font-size: 0.95rem; line-height: 1.5;">
+                                    <span style="position: absolute; left: 0; color: #00ff88; font-weight: bold;">•</span>
+                                    公链，联盟链，跨链，链通和链抽象
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 12px; padding-left: 20px; position: relative; font-size: 0.95rem; line-height: 1.5;">
+                                    <span style="position: absolute; left: 0; color: #00ff88; font-weight: bold;">•</span>
+                                    区块链密码学原理
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- 区块链数据结构 -->
+                        <div style="margin-bottom: 40px;">
+                            <h3 style="color: #0088ff; font-size: 1.4rem; font-weight: 600; margin-bottom: 20px; text-align: center; border-bottom: 2px solid #0088ff; padding-bottom: 10px;">区块链数据结构</h3>
+                            <ul style="list-style: none; padding: 0;">
+                                <li style="color: #e0e0e0; margin-bottom: 12px; padding-left: 20px; position: relative; font-size: 0.95rem; line-height: 1.5;">
+                                    <span style="position: absolute; left: 0; color: #0088ff; font-weight: bold;">•</span>
+                                    默克尔树
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 12px; padding-left: 20px; position: relative; font-size: 0.95rem; line-height: 1.5;">
+                                    <span style="position: absolute; left: 0; color: #0088ff; font-weight: bold;">•</span>
+                                    帕特里特树
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 12px; padding-left: 20px; position: relative; font-size: 0.95rem; line-height: 1.5;">
+                                    <span style="position: absolute; left: 0; color: #0088ff; font-weight: bold;">•</span>
+                                    布隆过滤器
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- 模块化区块链演变过程 -->
+                        <div>
+                            <h3 style="color: #9966ff; font-size: 1.4rem; font-weight: 600; margin-bottom: 20px; text-align: center; border-bottom: 2px solid #9966ff; padding-bottom: 10px;">模块化区块链演变过程</h3>
+                            <ul style="list-style: none; padding: 0;">
+                                <li style="color: #e0e0e0; margin-bottom: 12px; padding-left: 20px; position: relative; font-size: 0.95rem; line-height: 1.5;">
+                                    <span style="position: absolute; left: 0; color: #9966ff; font-weight: bold;">•</span>
+                                    共识层
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 12px; padding-left: 20px; position: relative; font-size: 0.95rem; line-height: 1.5;">
+                                    <span style="position: absolute; left: 0; color: #9966ff; font-weight: bold;">•</span>
+                                    执行层
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 12px; padding-left: 20px; position: relative; font-size: 0.95rem; line-height: 1.5;">
+                                    <span style="position: absolute; left: 0; color: #9966ff; font-weight: bold;">•</span>
+                                    数据可用层
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 12px; padding-left: 20px; position: relative; font-size: 0.95rem; line-height: 1.5;">
+                                    <span style="position: absolute; left: 0; color: #9966ff; font-weight: bold;">•</span>
+                                    结算层
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- 分隔线1 -->
+                    <div style="background: linear-gradient(to bottom, transparent, #00ff88, #0088ff, transparent); opacity: 0.6;"></div>
+
+                    <!-- 第二列：Bitcoin部分 -->
+                    <div style="padding: 0 15px;">
+                        <div>
+                            <h3 style="color: #ffaa00; font-size: 1.6rem; font-weight: 600; margin-bottom: 25px; text-align: center; border-bottom: 3px solid #ffaa00; padding-bottom: 12px;">Bitcoin 部分</h3>
+                            
+                            <!-- BTC基础课程讲解 -->
+                            <div style="margin-bottom: 25px;">
+                                <h4 style="color: #00ff88; font-size: 1.1rem; font-weight: 600; margin-bottom: 12px;">BTC 基础课程讲解</h4>
+                                <ul style="list-style: none; padding: 0; margin-left: 15px;">
+                                    <li style="color: #cccccc; margin-bottom: 8px; padding-left: 15px; position: relative; font-size: 0.9rem; line-height: 1.4;">
+                                        <span style="position: absolute; left: 0; color: #00ff88;">•</span>
+                                        BTC 数据组织结构
+                                    </li>
+                                    <li style="color: #cccccc; margin-bottom: 8px; padding-left: 15px; position: relative; font-size: 0.9rem; line-height: 1.4;">
+                                        <span style="position: absolute; left: 0; color: #00ff88;">•</span>
+                                        BTC 协议与实现
+                                    </li>
+                                    <li style="color: #cccccc; margin-bottom: 8px; padding-left: 15px; position: relative; font-size: 0.9rem; line-height: 1.4;">
+                                        <span style="position: absolute; left: 0; color: #00ff88;">•</span>
+                                        共识算法
+                                    </li>
+                                    <li style="color: #cccccc; margin-bottom: 8px; padding-left: 15px; position: relative; font-size: 0.9rem; line-height: 1.4;">
+                                        <span style="position: absolute; left: 0; color: #00ff88;">•</span>
+                                        链的组织结构
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <!-- BTC网络 -->
+                            <div style="margin-bottom: 25px;">
+                                <h4 style="color: #0088ff; font-size: 1.1rem; font-weight: 600; margin-bottom: 12px;">BTC 网络</h4>
+                                <ul style="list-style: none; padding: 0; margin-left: 15px;">
+                                    <li style="color: #cccccc; margin-bottom: 8px; padding-left: 15px; position: relative; font-size: 0.9rem; line-height: 1.4;">
+                                        <span style="position: absolute; left: 0; color: #0088ff;">•</span>
+                                        UTXO 模型
+                                    </li>
+                                    <li style="color: #cccccc; margin-bottom: 8px; padding-left: 15px; position: relative; font-size: 0.9rem; line-height: 1.4;">
+                                        <span style="position: absolute; left: 0; color: #0088ff;">•</span>
+                                        交易结构
+                                    </li>
+                                    <li style="color: #cccccc; margin-bottom: 8px; padding-left: 15px; position: relative; font-size: 0.9rem; line-height: 1.4;">
+                                        <span style="position: absolute; left: 0; color: #0088ff;">•</span>
+                                        比特币总量问题
+                                    </li>
+                                    <li style="color: #cccccc; margin-bottom: 8px; padding-left: 15px; position: relative; font-size: 0.9rem; line-height: 1.4;">
+                                        <span style="position: absolute; left: 0; color: #0088ff;">•</span>
+                                        比特币安全模型
+                                    </li>
+                                    <li style="color: #cccccc; margin-bottom: 8px; padding-left: 15px; position: relative; font-size: 0.9rem; line-height: 1.4;">
+                                        <span style="position: absolute; left: 0; color: #0088ff;">•</span>
+                                        确认位
+                                    </li>
+                                    <li style="color: #cccccc; margin-bottom: 8px; padding-left: 15px; position: relative; font-size: 0.9rem; line-height: 1.4;">
+                                        <span style="position: absolute; left: 0; color: #0088ff;">•</span>
+                                        攻击方式
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <!-- 其他BTC内容 -->
+                            <ul style="list-style: none; padding: 0;">
+                                <li style="color: #e0e0e0; margin-bottom: 12px; padding-left: 20px; position: relative; font-size: 0.95rem; line-height: 1.5;">
+                                    <span style="position: absolute; left: 0; color: #ffaa00; font-weight: bold;">•</span>
+                                    BTC 挖矿与挖矿难度
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 12px; padding-left: 20px; position: relative; font-size: 0.95rem; line-height: 1.5;">
+                                    <span style="position: absolute; left: 0; color: #ffaa00; font-weight: bold;">•</span>
+                                    BTC 脚本编程
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 12px; padding-left: 20px; position: relative; font-size: 0.95rem; line-height: 1.5;">
+                                    <span style="position: absolute; left: 0; color: #ffaa00; font-weight: bold;">•</span>
+                                    BTC 的版本迭代过程
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 12px; padding-left: 20px; position: relative; font-size: 0.95rem; line-height: 1.5;">
+                                    <span style="position: absolute; left: 0; color: #ffaa00; font-weight: bold;">•</span>
+                                    BTC 生态项目分析
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- 分隔线2 -->
+                    <div style="background: linear-gradient(to bottom, transparent, #0088ff, #9966ff, transparent); opacity: 0.6;"></div>
+
+                    <!-- 第三列：Ethereum与技术解决方案 -->
+                    <div style="padding-left: 15px;">
+                        <!-- Ethereum部分 -->
+                        <div style="margin-bottom: 35px;">
+                            <h3 style="color: #00ff88; font-size: 1.6rem; font-weight: 600; margin-bottom: 25px; text-align: center; border-bottom: 3px solid #00ff88; padding-bottom: 12px;">Ethereum 部分</h3>
+                            
+                            <ul style="list-style: none; padding: 0;">
+                                <li style="color: #e0e0e0; margin-bottom: 12px; padding-left: 20px; position: relative; font-size: 0.95rem; line-height: 1.5;">
+                                    <span style="position: absolute; left: 0; color: #00ff88; font-weight: bold;">•</span>
+                                    ETH 基础课程讲解
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 12px; padding-left: 20px; position: relative; font-size: 0.95rem; line-height: 1.5;">
+                                    <span style="position: absolute; left: 0; color: #00ff88; font-weight: bold;">•</span>
+                                    以太坊简介
+                                </li>
+                            </ul>
+
+                            <!-- 以太坊的三棵树 -->
+                            <div style="margin: 20px 0;">
+                                <h4 style="color: #0088ff; font-size: 1.1rem; font-weight: 600; margin-bottom: 12px;">以太坊的三棵树</h4>
+                                <ul style="list-style: none; padding: 0; margin-left: 15px;">
+                                    <li style="color: #cccccc; margin-bottom: 8px; padding-left: 15px; position: relative; font-size: 0.9rem; line-height: 1.4;">
+                                        <span style="position: absolute; left: 0; color: #0088ff;">•</span>
+                                        交易树
+                                    </li>
+                                    <li style="color: #cccccc; margin-bottom: 8px; padding-left: 15px; position: relative; font-size: 0.9rem; line-height: 1.4;">
+                                        <span style="position: absolute; left: 0; color: #0088ff;">•</span>
+                                        收据树
+                                    </li>
+                                    <li style="color: #cccccc; margin-bottom: 8px; padding-left: 15px; position: relative; font-size: 0.9rem; line-height: 1.4;">
+                                        <span style="position: absolute; left: 0; color: #0088ff;">•</span>
+                                        状态树
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <ul style="list-style: none; padding: 0;">
+                                <li style="color: #e0e0e0; margin-bottom: 12px; padding-left: 20px; position: relative; font-size: 0.95rem; line-height: 1.5;">
+                                    <span style="position: absolute; left: 0; color: #00ff88; font-weight: bold;">•</span>
+                                    以太坊的历史版本
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 12px; padding-left: 20px; position: relative; font-size: 0.95rem; line-height: 1.5;">
+                                    <span style="position: absolute; left: 0; color: #00ff88; font-weight: bold;">•</span>
+                                    以太坊 2.0 共识算法流程
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 12px; padding-left: 20px; position: relative; font-size: 0.95rem; line-height: 1.5;">
+                                    <span style="position: absolute; left: 0; color: #00ff88; font-weight: bold;">•</span>
+                                    Ethereum 的 EVM 状态机
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 12px; padding-left: 20px; position: relative; font-size: 0.95rem; line-height: 1.5;">
+                                    <span style="position: absolute; left: 0; color: #00ff88; font-weight: bold;">•</span>
+                                    以太坊智能合约
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 12px; padding-left: 20px; position: relative; font-size: 0.95rem; line-height: 1.5;">
+                                    <span style="position: absolute; left: 0; color: #00ff88; font-weight: bold;">•</span>
+                                    以太坊光速链展望
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 12px; padding-left: 20px; position: relative; font-size: 0.95rem; line-height: 1.5;">
+                                    <span style="position: absolute; left: 0; color: #00ff88; font-weight: bold;">•</span>
+                                    以太坊的生态系统项目分析
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- 技术解决方案与展望 -->
+                        <div>
+                            <h3 style="color: #9966ff; font-size: 1.4rem; font-weight: 600; margin-bottom: 20px; text-align: center; border-bottom: 2px solid #9966ff; padding-bottom: 10px;">技术解决方案与展望</h3>
+                            <ul style="list-style: none; padding: 0;">
+                                <li style="color: #e0e0e0; margin-bottom: 12px; padding-left: 20px; position: relative; font-size: 0.95rem; line-height: 1.5;">
+                                    <span style="position: absolute; left: 0; color: #9966ff; font-weight: bold;">•</span>
+                                    主流 L1 技术解决方案
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 12px; padding-left: 20px; position: relative; font-size: 0.95rem; line-height: 1.5;">
+                                    <span style="position: absolute; left: 0; color: #9966ff; font-weight: bold;">•</span>
+                                    主流的 L2 技术解决方案
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 12px; padding-left: 20px; position: relative; font-size: 0.95rem; line-height: 1.5;">
+                                    <span style="position: absolute; left: 0; color: #9966ff; font-weight: bold;">•</span>
+                                    链抽象技术解决方案分析
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 12px; padding-left: 20px; position: relative; font-size: 0.95rem; line-height: 1.5;">
+                                    <span style="position: absolute; left: 0; color: #9966ff; font-weight: bold;">•</span>
+                                    Web3 的未来展望
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 幻灯片3: 第二阶段 - 智能合约开发实战（线条分区版） -->
+        <div class="slide" id="slide3">
+            <div class="slide-content">
+                <h2>第二阶段：智能合约开发实战</h2>
+                
+                <!-- 使用线条分区的布局 -->
+                <div style="display: grid; grid-template-columns: 1fr 2px 1fr 2px 1fr 2px 1fr; gap: 25px; margin-top: 40px; max-width: 1600px; margin-left: auto; margin-right: auto;">
+                    
+                    <!-- 第一列：Solidity 基础编程 -->
+                    <div style="padding-right: 12px;">
+                        <div style="margin-bottom: 30px;">
+                            <h3 style="color: #00ff88; font-size: 1.3rem; font-weight: 600; margin-bottom: 18px; text-align: center; border-bottom: 2px solid #00ff88; padding-bottom: 8px;">Solidity 基础编程</h3>
+                            <ul style="list-style: none; padding: 0;">
+                                <li style="color: #e0e0e0; margin-bottom: 10px; padding-left: 18px; position: relative; font-size: 0.9rem; line-height: 1.4;">
+                                    <span style="position: absolute; left: 0; color: #00ff88; font-weight: bold;">•</span>
+                                    Remix 使用介绍
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 10px; padding-left: 18px; position: relative; font-size: 0.9rem; line-height: 1.4;">
+                                    <span style="position: absolute; left: 0; color: #00ff88; font-weight: bold;">•</span>
+                                    智能合约简介
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 10px; padding-left: 18px; position: relative; font-size: 0.9rem; line-height: 1.4;">
+                                    <span style="position: absolute; left: 0; color: #00ff88; font-weight: bold;">•</span>
+                                    合约文件结构
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 10px; padding-left: 18px; position: relative; font-size: 0.9rem; line-height: 1.4;">
+                                    <span style="position: absolute; left: 0; color: #00ff88; font-weight: bold;">•</span>
+                                    合约的定义
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 10px; padding-left: 18px; position: relative; font-size: 0.9rem; line-height: 1.4;">
+                                    <span style="position: absolute; left: 0; color: #00ff88; font-weight: bold;">•</span>
+                                    数据类型
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 10px; padding-left: 18px; position: relative; font-size: 0.9rem; line-height: 1.4;">
+                                    <span style="position: absolute; left: 0; color: #00ff88; font-weight: bold;">•</span>
+                                    循环分支控制
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 10px; padding-left: 18px; position: relative; font-size: 0.9rem; line-height: 1.4;">
+                                    <span style="position: absolute; left: 0; color: #00ff88; font-weight: bold;">•</span>
+                                    函数与函数选择器
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 10px; padding-left: 18px; position: relative; font-size: 0.9rem; line-height: 1.4;">
+                                    <span style="position: absolute; left: 0; color: #00ff88; font-weight: bold;">•</span>
+                                    事件
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 10px; padding-left: 18px; position: relative; font-size: 0.9rem; line-height: 1.4;">
+                                    <span style="position: absolute; left: 0; color: #00ff88; font-weight: bold;">•</span>
+                                    继承
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 10px; padding-left: 18px; position: relative; font-size: 0.9rem; line-height: 1.4;">
+                                    <span style="position: absolute; left: 0; color: #00ff88; font-weight: bold;">•</span>
+                                    抽象合约与接口
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 10px; padding-left: 18px; position: relative; font-size: 0.9rem; line-height: 1.4;">
+                                    <span style="position: absolute; left: 0; color: #00ff88; font-weight: bold;">•</span>
+                                    合约的 lib 库
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 10px; padding-left: 18px; position: relative; font-size: 0.9rem; line-height: 1.4;">
+                                    <span style="position: absolute; left: 0; color: #00ff88; font-weight: bold;">•</span>
+                                    异常处理
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 10px; padding-left: 18px; position: relative; font-size: 0.9rem; line-height: 1.4;">
+                                    <span style="position: absolute; left: 0; color: #00ff88; font-weight: bold;">•</span>
+                                    变量作用域和数据存储
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 10px; padding-left: 18px; position: relative; font-size: 0.9rem; line-height: 1.4;">
+                                    <span style="position: absolute; left: 0; color: #00ff88; font-weight: bold;">•</span>
+                                    Solidity 内存布局
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- 分隔线1 -->
+                    <div style="background: linear-gradient(to bottom, transparent, #00ff88, #0088ff, transparent); opacity: 0.6;"></div>
+
+                    <!-- 第二列：Solidity 进阶编程 -->
+                    <div style="padding: 0 12px;">
+                        <div style="margin-bottom: 30px;">
+                            <h3 style="color: #0088ff; font-size: 1.3rem; font-weight: 600; margin-bottom: 18px; text-align: center; border-bottom: 2px solid #0088ff; padding-bottom: 8px;">Solidity 进阶编程</h3>
+                            <ul style="list-style: none; padding: 0;">
+                                <li style="color: #e0e0e0; margin-bottom: 10px; padding-left: 18px; position: relative; font-size: 0.9rem; line-height: 1.4;">
+                                    <span style="position: absolute; left: 0; color: #0088ff; font-weight: bold;">•</span>
+                                    call, delegatecall, staticcall 和 multicall 基本使用
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 10px; padding-left: 18px; position: relative; font-size: 0.9rem; line-height: 1.4;">
+                                    <span style="position: absolute; left: 0; color: #0088ff; font-weight: bold;">•</span>
+                                    跨合约调用方式
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 10px; padding-left: 18px; position: relative; font-size: 0.9rem; line-height: 1.4;">
+                                    <span style="position: absolute; left: 0; color: #0088ff; font-weight: bold;">•</span>
+                                    常见的address(this)，tx.origin 和 msg.sender 语句解释
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 10px; padding-left: 18px; position: relative; font-size: 0.9rem; line-height: 1.4;">
+                                    <span style="position: absolute; left: 0; color: #0088ff; font-weight: bold;">•</span>
+                                    create 和 create2 底层原理与实现机制
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 10px; padding-left: 18px; position: relative; font-size: 0.9rem; line-height: 1.4;">
+                                    <span style="position: absolute; left: 0; color: #0088ff; font-weight: bold;">•</span>
+                                    合约自毁（新版本已废弃）
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 10px; padding-left: 18px; position: relative; font-size: 0.9rem; line-height: 1.4;">
+                                    <span style="position: absolute; left: 0; color: #0088ff; font-weight: bold;">•</span>
+                                    Solidity 内联汇编
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 10px; padding-left: 18px; position: relative; font-size: 0.9rem; line-height: 1.4;">
+                                    <span style="position: absolute; left: 0; color: #0088ff; font-weight: bold;">•</span>
+                                    合约的升级方式
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 10px; padding-left: 18px; position: relative; font-size: 0.9rem; line-height: 1.4;">
+                                    <span style="position: absolute; left: 0; color: #0088ff; font-weight: bold;">•</span>
+                                    OZ 代码库讲解
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 10px; padding-left: 18px; position: relative; font-size: 0.9rem; line-height: 1.4;">
+                                    <span style="position: absolute; left: 0; color: #0088ff; font-weight: bold;">•</span>
+                                    ABI 编解码和生成 bindings
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 8px; padding-left: 18px; position: relative; font-size: 0.9rem; line-height: 1.4;">
+                                    <span style="position: absolute; left: 0; color: #0088ff; font-weight: bold;">•</span>
+                                    智能合约开发工具
+                                </li>
+                                <li style="color: #cccccc; margin-bottom: 6px; padding-left: 35px; position: relative; font-size: 0.82rem; line-height: 1.3;">
+                                    <span style="position: absolute; left: 20px; color: #0088ff;">•</span>
+                                    深入理解 hardhat 的使用
+                                </li>
+                                <li style="color: #cccccc; margin-bottom: 6px; padding-left: 35px; position: relative; font-size: 0.82rem; line-height: 1.3;">
+                                    <span style="position: absolute; left: 20px; color: #0088ff;">•</span>
+                                    深入理解 foundry 的使用
+                                </li>
+                                <li style="color: #cccccc; margin-bottom: 6px; padding-left: 35px; position: relative; font-size: 0.82rem; line-height: 1.3;">
+                                    <span style="position: absolute; left: 20px; color: #0088ff;">•</span>
+                                    常用的 RPC 节点服务商
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- 分隔线2 -->
+                    <div style="background: linear-gradient(to bottom, transparent, #0088ff, #00ff88, transparent); opacity: 0.6;"></div>
+
+                    <!-- 第三列：Solidity 小实战 -->
+                    <div style="padding: 0 12px;">
+                        <div style="margin-bottom: 30px;">
+                            <h3 style="color: #ffaa00; font-size: 1.3rem; font-weight: 600; margin-bottom: 18px; text-align: center; border-bottom: 2px solid #ffaa00; padding-bottom: 8px;">Solidity 小实战</h3>
+                            <ul style="list-style: none; padding: 0;">
+                                <li style="color: #e0e0e0; margin-bottom: 10px; padding-left: 18px; position: relative; font-size: 0.9rem; line-height: 1.4;">
+                                    <span style="position: absolute; left: 0; color: #ffaa00; font-weight: bold;">•</span>
+                                    发行自己的第一个代币
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 10px; padding-left: 18px; position: relative; font-size: 0.9rem; line-height: 1.4;">
+                                    <span style="position: absolute; left: 0; color: #ffaa00; font-weight: bold;">•</span>
+                                    使用智能合约基于 Merkle Tree 空投合约
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 10px; padding-left: 18px; position: relative; font-size: 0.9rem; line-height: 1.4;">
+                                    <span style="position: absolute; left: 0; color: #ffaa00; font-weight: bold;">•</span>
+                                    链上链下结合的去中心化随机数开发实战---类似 chainlink vrf
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 10px; padding-left: 18px; position: relative; font-size: 0.9rem; line-height: 1.4;">
+                                    <span style="position: absolute; left: 0; color: #ffaa00; font-weight: bold;">•</span>
+                                    代币锁和时间锁
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 10px; padding-left: 18px; position: relative; font-size: 0.9rem; line-height: 1.4;">
+                                    <span style="position: absolute; left: 0; color: #ffaa00; font-weight: bold;">•</span>
+                                    Hash 数字游戏
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 10px; padding-left: 18px; position: relative; font-size: 0.9rem; line-height: 1.4;">
+                                    <span style="position: absolute; left: 0; color: #ffaa00; font-weight: bold;">•</span>
+                                    基于 TheGraph 开发合约事件监听器
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 10px; padding-left: 18px; position: relative; font-size: 0.9rem; line-height: 1.4;">
+                                    <span style="position: absolute; left: 0; color: #ffaa00; font-weight: bold;">•</span>
+                                    Golang 监听合约事件项目实战
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 10px; padding-left: 18px; position: relative; font-size: 0.9rem; line-height: 1.4;">
+                                    <span style="position: absolute; left: 0; color: #ffaa00; font-weight: bold;">•</span>
+                                    开发自己的 NFT 平台
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- 分隔线3 -->
+                    <div style="background: linear-gradient(to bottom, transparent, #ffaa00, #9966ff, transparent); opacity: 0.6;"></div>
+
+                    <!-- 第四列：大项目实战 -->
+                    <div style="padding-left: 12px;">
+                        <div style="margin-bottom: 30px;">
+                            <h3 style="color: #9966ff; font-size: 1.3rem; font-weight: 600; margin-bottom: 18px; text-align: center; border-bottom: 2px solid #9966ff; padding-bottom: 8px;">大项目实战</h3>
+                            <ul style="list-style: none; padding: 0;">
+                                <li style="color: #e0e0e0; margin-bottom: 10px; padding-left: 18px; position: relative; font-size: 0.9rem; line-height: 1.4;">
+                                    <span style="position: absolute; left: 0; color: #9966ff; font-weight: bold;">•</span>
+                                    链上保险项目实战
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 10px; padding-left: 18px; position: relative; font-size: 0.9rem; line-height: 1.4;">
+                                    <span style="position: absolute; left: 0; color: #9966ff; font-weight: bold;">•</span>
+                                    EventFi 项目实战
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 8px; padding-left: 18px; position: relative; font-size: 0.9rem; line-height: 1.4;">
+                                    <span style="position: absolute; left: 0; color: #9966ff; font-weight: bold;">•</span>
+                                    核心 DEFI 协议分析
+                                </li>
+                                <li style="color: #cccccc; margin-bottom: 6px; padding-left: 35px; position: relative; font-size: 0.82rem; line-height: 1.3;">
+                                    <span style="position: absolute; left: 20px; color: #9966ff;">•</span>
+                                    Uniswap 各版本协议讲解(以实战的方式进行)
+                                </li>
+                                <li style="color: #cccccc; margin-bottom: 6px; padding-left: 35px; position: relative; font-size: 0.82rem; line-height: 1.3;">
+                                    <span style="position: absolute; left: 20px; color: #9966ff;">•</span>
+                                    Compound 各版本协议讲解
+                                </li>
+                                <li style="color: #cccccc; margin-bottom: 6px; padding-left: 35px; position: relative; font-size: 0.82rem; line-height: 1.3;">
+                                    <span style="position: absolute; left: 20px; color: #9966ff;">•</span>
+                                    LSD 和 EigenLayer 再质押协议讲解
+                                </li>
+                                <li style="color: #cccccc; margin-bottom: 12px; padding-left: 35px; position: relative; font-size: 0.82rem; line-height: 1.3;">
+                                    <span style="position: absolute; left: 20px; color: #9966ff;">•</span>
+                                    EigenLayer AVS 协议讲解
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 8px; padding-left: 18px; position: relative; font-size: 0.9rem; line-height: 1.4;">
+                                    <span style="position: absolute; left: 0; color: #9966ff; font-weight: bold;">•</span>
+                                    预言机项目实战
+                                </li>
+                                <li style="color: #cccccc; margin-bottom: 6px; padding-left: 35px; position: relative; font-size: 0.82rem; line-height: 1.3;">
+                                    <span style="position: absolute; left: 20px; color: #9966ff;">•</span>
+                                    价格预言价项目开发实战
+                                </li>
+                                <li style="color: #cccccc; margin-bottom: 6px; padding-left: 35px; position: relative; font-size: 0.82rem; line-height: 1.3;">
+                                    <span style="position: absolute; left: 20px; color: #9966ff;">•</span>
+                                    L2 Gas 预言机项目开发实战
+                                </li>
+                                <li style="color: #cccccc; margin-bottom: 12px; padding-left: 35px; position: relative; font-size: 0.82rem; line-height: 1.3;">
+                                    <span style="position: absolute; left: 20px; color: #9966ff;">•</span>
+                                    第三方快速跨链桥预言机项目开发实战
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 10px; padding-left: 18px; position: relative; font-size: 0.9rem; line-height: 1.4;">
+                                    <span style="position: absolute; left: 0; color: #9966ff; font-weight: bold;">•</span>
+                                    基于 OP 和 Polygon ZkEvm 的 L1&lt;-&gt;L2 官方桥代码讲解
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 10px; padding-left: 18px; position: relative; font-size: 0.9rem; line-height: 1.4;">
+                                    <span style="position: absolute; left: 0; color: #9966ff; font-weight: bold;">•</span>
+                                    第三方快速跨链桥项目实战
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 10px; padding-left: 18px; position: relative; font-size: 0.9rem; line-height: 1.4;">
+                                    <span style="position: absolute; left: 0; color: #9966ff; font-weight: bold;">•</span>
+                                    RWA 项目实战
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 10px; padding-left: 18px; position: relative; font-size: 0.9rem; line-height: 1.4;">
+                                    <span style="position: absolute; left: 0; color: #9966ff; font-weight: bold;">•</span>
+                                    MantaLayer 再质押加主动验证流程项目实战
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 幻灯片4: 第三阶段 - 钱包技术开发（线条分区版） -->
+        <div class="slide" id="slide4">
+            <div class="slide-content">
+                <h2>第三阶段：钱包技术开发</h2>
+                
+                <!-- 使用线条分区的布局 -->
+                <div style="display: grid; grid-template-columns: 1fr 2px 1fr 2px 1fr 2px 1fr 2px 1fr; gap: 20px; margin-top: 40px; max-width: 1800px; margin-left: auto; margin-right: auto;">
+                    
+                    <!-- 第一列：钱包基础知识 -->
+                    <div style="padding-right: 10px;">
+                        <div style="margin-bottom: 25px;">
+                            <h3 style="color: #00ff88; font-size: 1.2rem; font-weight: 600; margin-bottom: 15px; text-align: center; border-bottom: 2px solid #00ff88; padding-bottom: 6px;">钱包基础知识</h3>
+                            <ul style="list-style: none; padding: 0;">
+                                <li style="color: #e0e0e0; margin-bottom: 8px; padding-left: 16px; position: relative; font-size: 0.82rem; line-height: 1.3;">
+                                    <span style="position: absolute; left: 0; color: #00ff88; font-weight: bold;">•</span>
+                                    什么是数字钱包，钱包的发展历程
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 8px; padding-left: 16px; position: relative; font-size: 0.82rem; line-height: 1.3;">
+                                    <span style="position: absolute; left: 0; color: #00ff88; font-weight: bold;">•</span>
+                                    区块链与钱包的关系
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 8px; padding-left: 16px; position: relative; font-size: 0.82rem; line-height: 1.3;">
+                                    <span style="position: absolute; left: 0; color: #00ff88; font-weight: bold;">•</span>
+                                    数字钱包的分类与作用
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 8px; padding-left: 16px; position: relative; font-size: 0.82rem; line-height: 1.3;">
+                                    <span style="position: absolute; left: 0; color: #00ff88; font-weight: bold;">•</span>
+                                    热钱包与冷钱包的区别
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 8px; padding-left: 16px; position: relative; font-size: 0.82rem; line-height: 1.3;">
+                                    <span style="position: absolute; left: 0; color: #00ff88; font-weight: bold;">•</span>
+                                    钱包的核心功能与技术原理
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 8px; padding-left: 16px; position: relative; font-size: 0.82rem; line-height: 1.3;">
+                                    <span style="position: absolute; left: 0; color: #00ff88; font-weight: bold;">•</span>
+                                    钱包常用密码学
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 8px; padding-left: 16px; position: relative; font-size: 0.82rem; line-height: 1.3;">
+                                    <span style="position: absolute; left: 0; color: #00ff88; font-weight: bold;">•</span>
+                                    单向散列函数
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 8px; padding-left: 16px; position: relative; font-size: 0.82rem; line-height: 1.3;">
+                                    <span style="position: absolute; left: 0; color: #00ff88; font-weight: bold;">•</span>
+                                    对称加密与对称加密
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 8px; padding-left: 16px; position: relative; font-size: 0.82rem; line-height: 1.3;">
+                                    <span style="position: absolute; left: 0; color: #00ff88; font-weight: bold;">•</span>
+                                    BLS 和 Schnnor 签名验证
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 8px; padding-left: 16px; position: relative; font-size: 0.82rem; line-height: 1.3;">
+                                    <span style="position: absolute; left: 0; color: #00ff88; font-weight: bold;">•</span>
+                                    门限共享秘密算法
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 8px; padding-left: 16px; position: relative; font-size: 0.82rem; line-height: 1.3;">
+                                    <span style="position: absolute; left: 0; color: #00ff88; font-weight: bold;">•</span>
+                                    MPC 算法
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 8px; padding-left: 16px; position: relative; font-size: 0.82rem; line-height: 1.3;">
+                                    <span style="position: absolute; left: 0; color: #00ff88; font-weight: bold;">•</span>
+                                    不同钱包的密钥管理方式
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- HD钱包 -->
+                        <div style="margin-bottom: 25px;">
+                            <h3 style="color: #0088ff; font-size: 1.2rem; font-weight: 600; margin-bottom: 15px; text-align: center; border-bottom: 2px solid #0088ff; padding-bottom: 6px;">确定性分层钱包</h3>
+                            <ul style="list-style: none; padding: 0;">
+                                <li style="color: #e0e0e0; margin-bottom: 8px; padding-left: 16px; position: relative; font-size: 0.82rem; line-height: 1.3;">
+                                    <span style="position: absolute; left: 0; color: #0088ff; font-weight: bold;">•</span>
+                                    助记词的生成与用途
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 8px; padding-left: 16px; position: relative; font-size: 0.82rem; line-height: 1.3;">
+                                    <span style="position: absolute; left: 0; color: #0088ff; font-weight: bold;">•</span>
+                                    助记词与私钥, 公钥的关系
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 8px; padding-left: 16px; position: relative; font-size: 0.82rem; line-height: 1.3;">
+                                    <span style="position: absolute; left: 0; color: #0088ff; font-weight: bold;">•</span>
+                                    BIP39 标准解析
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 8px; padding-left: 16px; position: relative; font-size: 0.82rem; line-height: 1.3;">
+                                    <span style="position: absolute; left: 0; color: #0088ff; font-weight: bold;">•</span>
+                                    BIP32 分层确定性钱包（HD钱包）
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 8px; padding-left: 16px; position: relative; font-size: 0.82rem; line-height: 1.3;">
+                                    <span style="position: absolute; left: 0; color: #0088ff; font-weight: bold;">•</span>
+                                    BIP44 多资产多账户支持
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 8px; padding-left: 16px; position: relative; font-size: 0.82rem; line-height: 1.3;">
+                                    <span style="position: absolute; left: 0; color: #0088ff; font-weight: bold;">•</span>
+                                    BIP49 与 BIP84: 兼容性扩展
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 8px; padding-left: 16px; position: relative; font-size: 0.82rem; line-height: 1.3;">
+                                    <span style="position: absolute; left: 0; color: #0088ff; font-weight: bold;">•</span>
+                                    基于 BIP86 Taproot 地址格式
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 8px; padding-left: 16px; position: relative; font-size: 0.82rem; line-height: 1.3;">
+                                    <span style="position: absolute; left: 0; color: #0088ff; font-weight: bold;">•</span>
+                                    BIP协议的综合应用
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- 分隔线1 -->
+                    <div style="background: linear-gradient(to bottom, transparent, #00ff88, #0088ff, transparent); opacity: 0.6;"></div>
+
+                    <!-- 第二列：钱包类别与链调研 -->
+                    <div style="padding: 0 10px;">
+                        <div style="margin-bottom: 25px;">
+                            <h3 style="color: #ffaa00; font-size: 1.2rem; font-weight: 600; margin-bottom: 15px; text-align: center; border-bottom: 2px solid #ffaa00; padding-bottom: 6px;">钱包类别与实现</h3>
+                            <ul style="list-style: none; padding: 0;">
+                                <li style="color: #e0e0e0; margin-bottom: 8px; padding-left: 16px; position: relative; font-size: 0.82rem; line-height: 1.3;">
+                                    <span style="position: absolute; left: 0; color: #ffaa00; font-weight: bold;">•</span>
+                                    中心化(交易所)钱包
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 8px; padding-left: 16px; position: relative; font-size: 0.82rem; line-height: 1.3;">
+                                    <span style="position: absolute; left: 0; color: #ffaa00; font-weight: bold;">•</span>
+                                    去中心化(HD钱包)钱包
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 8px; padding-left: 16px; position: relative; font-size: 0.82rem; line-height: 1.3;">
+                                    <span style="position: absolute; left: 0; color: #ffaa00; font-weight: bold;">•</span>
+                                    MPC 托管系统与 C 端钱包
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 8px; padding-left: 16px; position: relative; font-size: 0.82rem; line-height: 1.3;">
+                                    <span style="position: absolute; left: 0; color: #ffaa00; font-weight: bold;">•</span>
+                                    硬件钱包
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 8px; padding-left: 16px; position: relative; font-size: 0.82rem; line-height: 1.3;">
+                                    <span style="position: absolute; left: 0; color: #ffaa00; font-weight: bold;">•</span>
+                                    基于密码学的多签钱包
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 8px; padding-left: 16px; position: relative; font-size: 0.82rem; line-height: 1.3;">
+                                    <span style="position: absolute; left: 0; color: #ffaa00; font-weight: bold;">•</span>
+                                    Gnosis safe 多签钱包
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 8px; padding-left: 16px; position: relative; font-size: 0.82rem; line-height: 1.3;">
+                                    <span style="position: absolute; left: 0; color: #ffaa00; font-weight: bold;">•</span>
+                                    抽象账户(AA)钱包
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- 链调研基础 -->
+                        <div style="margin-bottom: 25px;">
+                            <h3 style="color: #9966ff; font-size: 1.2rem; font-weight: 600; margin-bottom: 15px; text-align: center; border-bottom: 2px solid #9966ff; padding-bottom: 6px;">链调研基础</h3>
+                            <ul style="list-style: none; padding: 0;">
+                                <li style="color: #e0e0e0; margin-bottom: 8px; padding-left: 16px; position: relative; font-size: 0.82rem; line-height: 1.3;">
+                                    <span style="position: absolute; left: 0; color: #9966ff; font-weight: bold;">•</span>
+                                    钱包开发中如何快速调研一条链
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- 分隔线2 -->
+                    <div style="background: linear-gradient(to bottom, transparent, #0088ff, #ffaa00, transparent); opacity: 0.6;"></div>
+
+                    <!-- 第三列：主流钱包开发 -->
+                    <div style="padding: 0 10px;">
+                        <div style="margin-bottom: 20px;">
+                            <h3 style="color: #00ff88; font-size: 1.2rem; font-weight: 600; margin-bottom: 15px; text-align: center; border-bottom: 2px solid #00ff88; padding-bottom: 6px;">Bitcoin 钱包</h3>
+                            <ul style="list-style: none; padding: 0;">
+                                <li style="color: #e0e0e0; margin-bottom: 6px; padding-left: 16px; position: relative; font-size: 0.8rem; line-height: 1.2;">
+                                    <span style="position: absolute; left: 0; color: #00ff88; font-weight: bold;">•</span>
+                                    Bitcoin 简介
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 6px; padding-left: 16px; position: relative; font-size: 0.8rem; line-height: 1.2;">
+                                    <span style="position: absolute; left: 0; color: #00ff88; font-weight: bold;">•</span>
+                                    Bitcoin 的发展过程
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 6px; padding-left: 16px; position: relative; font-size: 0.8rem; line-height: 1.2;">
+                                    <span style="position: absolute; left: 0; color: #00ff88; font-weight: bold;">•</span>
+                                    Bitcoin 钱包 RPC 节点搭建
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 6px; padding-left: 16px; position: relative; font-size: 0.8rem; line-height: 1.2;">
+                                    <span style="position: absolute; left: 0; color: #00ff88; font-weight: bold;">•</span>
+                                    不同格式的 Bitcoin 地址底层实现机制
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 6px; padding-left: 16px; position: relative; font-size: 0.8rem; line-height: 1.2;">
+                                    <span style="position: absolute; left: 0; color: #00ff88; font-weight: bold;">•</span>
+                                    Bitcoin 离线地址生成
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 6px; padding-left: 16px; position: relative; font-size: 0.8rem; line-height: 1.2;">
+                                    <span style="position: absolute; left: 0; color: #00ff88; font-weight: bold;">•</span>
+                                    Bitcoin 交易离线签名
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 12px; padding-left: 16px; position: relative; font-size: 0.8rem; line-height: 1.2;">
+                                    <span style="position: absolute; left: 0; color: #00ff88; font-weight: bold;">•</span>
+                                    Bitcoin 钱包相关的 RPC 接口介绍
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div style="margin-bottom: 20px;">
+                            <h3 style="color: #0088ff; font-size: 1.2rem; font-weight: 600; margin-bottom: 15px; text-align: center; border-bottom: 2px solid #0088ff; padding-bottom: 6px;">Ethereum 钱包</h3>
+                            <ul style="list-style: none; padding: 0;">
+                                <li style="color: #e0e0e0; margin-bottom: 6px; padding-left: 16px; position: relative; font-size: 0.8rem; line-height: 1.2;">
+                                    <span style="position: absolute; left: 0; color: #0088ff; font-weight: bold;">•</span>
+                                    Ethereum 简介
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 6px; padding-left: 16px; position: relative; font-size: 0.8rem; line-height: 1.2;">
+                                    <span style="position: absolute; left: 0; color: #0088ff; font-weight: bold;">•</span>
+                                    Ethereum 的发展过程
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 6px; padding-left: 16px; position: relative; font-size: 0.8rem; line-height: 1.2;">
+                                    <span style="position: absolute; left: 0; color: #0088ff; font-weight: bold;">•</span>
+                                    Ethereum 钱包 RPC 节点搭建
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 6px; padding-left: 16px; position: relative; font-size: 0.8rem; line-height: 1.2;">
+                                    <span style="position: absolute; left: 0; color: #0088ff; font-weight: bold;">•</span>
+                                    Ethereum 离线地址生成
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 6px; padding-left: 16px; position: relative; font-size: 0.8rem; line-height: 1.2;">
+                                    <span style="position: absolute; left: 0; color: #0088ff; font-weight: bold;">•</span>
+                                    Ethereum 交易离线签名
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 12px; padding-left: 16px; position: relative; font-size: 0.8rem; line-height: 1.2;">
+                                    <span style="position: absolute; left: 0; color: #0088ff; font-weight: bold;">•</span>
+                                    Ethereum 钱包相关的 RPC 接口介绍
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div style="margin-bottom: 20px;">
+                            <h3 style="color: #ffaa00; font-size: 1.2rem; font-weight: 600; margin-bottom: 15px; text-align: center; border-bottom: 2px solid #ffaa00; padding-bottom: 6px;">Solana 钱包</h3>
+                            <ul style="list-style: none; padding: 0;">
+                                <li style="color: #e0e0e0; margin-bottom: 6px; padding-left: 16px; position: relative; font-size: 0.8rem; line-height: 1.2;">
+                                    <span style="position: absolute; left: 0; color: #ffaa00; font-weight: bold;">•</span>
+                                    Solana 简介
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 6px; padding-left: 16px; position: relative; font-size: 0.8rem; line-height: 1.2;">
+                                    <span style="position: absolute; left: 0; color: #ffaa00; font-weight: bold;">•</span>
+                                    Solana 的发展过程
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 6px; padding-left: 16px; position: relative; font-size: 0.8rem; line-height: 1.2;">
+                                    <span style="position: absolute; left: 0; color: #ffaa00; font-weight: bold;">•</span>
+                                    Solana 底层原理及智能合约详解讲解
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 6px; padding-left: 16px; position: relative; font-size: 0.8rem; line-height: 1.2;">
+                                    <span style="position: absolute; left: 0; color: #ffaa00; font-weight: bold;">•</span>
+                                    Solana 钱包 RPC 节点搭建
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 6px; padding-left: 16px; position: relative; font-size: 0.8rem; line-height: 1.2;">
+                                    <span style="position: absolute; left: 0; color: #ffaa00; font-weight: bold;">•</span>
+                                    Solana 离线地址生成
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 6px; padding-left: 16px; position: relative; font-size: 0.8rem; line-height: 1.2;">
+                                    <span style="position: absolute; left: 0; color: #ffaa00; font-weight: bold;">•</span>
+                                    Solana 交易离线签名
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 6px; padding-left: 16px; position: relative; font-size: 0.8rem; line-height: 1.2;">
+                                    <span style="position: absolute; left: 0; color: #ffaa00; font-weight: bold;">•</span>
+                                    Solana 钱包相关的 RPC 接口介绍
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- 分隔线3 -->
+                    <div style="background: linear-gradient(to bottom, transparent, #ffaa00, #9966ff, transparent); opacity: 0.6;"></div>
+
+                    <!-- 第四列：多链钱包开发 -->
+                    <div style="padding: 0 10px;">
+                        <div style="margin-bottom: 18px;">
+                            <h3 style="color: #9966ff; font-size: 1.1rem; font-weight: 600; margin-bottom: 12px; text-align: center; border-bottom: 2px solid #9966ff; padding-bottom: 5px;">Cosmos 钱包</h3>
+                            <ul style="list-style: none; padding: 0;">
+                                <li style="color: #e0e0e0; margin-bottom: 4px; padding-left: 14px; position: relative; font-size: 0.75rem; line-height: 1.1;">
+                                    <span style="position: absolute; left: 0; color: #9966ff; font-weight: bold;">•</span>
+                                    Cosmos 简介
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 4px; padding-left: 14px; position: relative; font-size: 0.75rem; line-height: 1.1;">
+                                    <span style="position: absolute; left: 0; color: #9966ff; font-weight: bold;">•</span>
+                                    Cosmos 的发展过程
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 4px; padding-left: 14px; position: relative; font-size: 0.75rem; line-height: 1.1;">
+                                    <span style="position: absolute; left: 0; color: #9966ff; font-weight: bold;">•</span>
+                                    Cosmos 钱包 RPC 节点搭建
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 4px; padding-left: 14px; position: relative; font-size: 0.75rem; line-height: 1.1;">
+                                    <span style="position: absolute; left: 0; color: #9966ff; font-weight: bold;">•</span>
+                                    Cosmos 离线地址生成
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 4px; padding-left: 14px; position: relative; font-size: 0.75rem; line-height: 1.1;">
+                                    <span style="position: absolute; left: 0; color: #9966ff; font-weight: bold;">•</span>
+                                    Cosmos 交易离线签名
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 8px; padding-left: 14px; position: relative; font-size: 0.75rem; line-height: 1.1;">
+                                    <span style="position: absolute; left: 0; color: #9966ff; font-weight: bold;">•</span>
+                                    Cosmos 钱包相关的 RPC 接口介绍
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div style="margin-bottom: 18px;">
+                            <h3 style="color: #00ff88; font-size: 1.1rem; font-weight: 600; margin-bottom: 12px; text-align: center; border-bottom: 2px solid #00ff88; padding-bottom: 5px;">SUI 钱包</h3>
+                            <ul style="list-style: none; padding: 0;">
+                                <li style="color: #e0e0e0; margin-bottom: 4px; padding-left: 14px; position: relative; font-size: 0.75rem; line-height: 1.1;">
+                                    <span style="position: absolute; left: 0; color: #00ff88; font-weight: bold;">•</span>
+                                    SUI 简介
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 4px; padding-left: 14px; position: relative; font-size: 0.75rem; line-height: 1.1;">
+                                    <span style="position: absolute; left: 0; color: #00ff88; font-weight: bold;">•</span>
+                                    SUI 的发展过程
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 4px; padding-left: 14px; position: relative; font-size: 0.75rem; line-height: 1.1;">
+                                    <span style="position: absolute; left: 0; color: #00ff88; font-weight: bold;">•</span>
+                                    SUI 钱包 RPC 节点搭建
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 4px; padding-left: 14px; position: relative; font-size: 0.75rem; line-height: 1.1;">
+                                    <span style="position: absolute; left: 0; color: #00ff88; font-weight: bold;">•</span>
+                                    SUI 离线地址生成
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 4px; padding-left: 14px; position: relative; font-size: 0.75rem; line-height: 1.1;">
+                                    <span style="position: absolute; left: 0; color: #00ff88; font-weight: bold;">•</span>
+                                    SUI 交易离线签名
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 8px; padding-left: 14px; position: relative; font-size: 0.75rem; line-height: 1.1;">
+                                    <span style="position: absolute; left: 0; color: #00ff88; font-weight: bold;">•</span>
+                                    SUI 钱包相关的 RPC 接口介绍
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div style="margin-bottom: 18px;">
+                            <h3 style="color: #0088ff; font-size: 1.1rem; font-weight: 600; margin-bottom: 12px; text-align: center; border-bottom: 2px solid #0088ff; padding-bottom: 5px;">TRON 钱包</h3>
+                            <ul style="list-style: none; padding: 0;">
+                                <li style="color: #e0e0e0; margin-bottom: 4px; padding-left: 14px; position: relative; font-size: 0.75rem; line-height: 1.1;">
+                                    <span style="position: absolute; left: 0; color: #0088ff; font-weight: bold;">•</span>
+                                    TRON 简介
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 4px; padding-left: 14px; position: relative; font-size: 0.75rem; line-height: 1.1;">
+                                    <span style="position: absolute; left: 0; color: #0088ff; font-weight: bold;">•</span>
+                                    TRON 的发展过程
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 4px; padding-left: 14px; position: relative; font-size: 0.75rem; line-height: 1.1;">
+                                    <span style="position: absolute; left: 0; color: #0088ff; font-weight: bold;">•</span>
+                                    TRON 钱包 RPC 节点搭建
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 4px; padding-left: 14px; position: relative; font-size: 0.75rem; line-height: 1.1;">
+                                    <span style="position: absolute; left: 0; color: #0088ff; font-weight: bold;">•</span>
+                                    TRON 离线地址生成
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 4px; padding-left: 14px; position: relative; font-size: 0.75rem; line-height: 1.1;">
+                                    <span style="position: absolute; left: 0; color: #0088ff; font-weight: bold;">•</span>
+                                    TRON 交易离线签名
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 8px; padding-left: 14px; position: relative; font-size: 0.75rem; line-height: 1.1;">
+                                    <span style="position: absolute; left: 0; color: #0088ff; font-weight: bold;">•</span>
+                                    TRON 钱包相关的 RPC 接口介绍
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div style="margin-bottom: 18px;">
+                            <h3 style="color: #ffaa00; font-size: 1.1rem; font-weight: 600; margin-bottom: 12px; text-align: center; border-bottom: 2px solid #ffaa00; padding-bottom: 5px;">KDA 钱包</h3>
+                            <ul style="list-style: none; padding: 0;">
+                                <li style="color: #e0e0e0; margin-bottom: 4px; padding-left: 14px; position: relative; font-size: 0.75rem; line-height: 1.1;">
+                                    <span style="position: absolute; left: 0; color: #ffaa00; font-weight: bold;">•</span>
+                                    KDA 简介
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 4px; padding-left: 14px; position: relative; font-size: 0.75rem; line-height: 1.1;">
+                                    <span style="position: absolute; left: 0; color: #ffaa00; font-weight: bold;">•</span>
+                                    KDA 的发展过程
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 4px; padding-left: 14px; position: relative; font-size: 0.75rem; line-height: 1.1;">
+                                    <span style="position: absolute; left: 0; color: #ffaa00; font-weight: bold;">•</span>
+                                    KDA 钱包 RPC 节点搭建
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 4px; padding-left: 14px; position: relative; font-size: 0.75rem; line-height: 1.1;">
+                                    <span style="position: absolute; left: 0; color: #ffaa00; font-weight: bold;">•</span>
+                                    KDA 离线地址生成
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 4px; padding-left: 14px; position: relative; font-size: 0.75rem; line-height: 1.1;">
+                                    <span style="position: absolute; left: 0; color: #ffaa00; font-weight: bold;">•</span>
+                                    KDA 交易离线签名
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 8px; padding-left: 14px; position: relative; font-size: 0.75rem; line-height: 1.1;">
+                                    <span style="position: absolute; left: 0; color: #ffaa00; font-weight: bold;">•</span>
+                                    KDA 钱包相关的 RPC 接口介绍
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div style="margin-bottom: 18px;">
+                            <h3 style="color: #9966ff; font-size: 1.1rem; font-weight: 600; margin-bottom: 12px; text-align: center; border-bottom: 2px solid #9966ff; padding-bottom: 5px;">STX 钱包</h3>
+                            <ul style="list-style: none; padding: 0;">
+                                <li style="color: #e0e0e0; margin-bottom: 4px; padding-left: 14px; position: relative; font-size: 0.75rem; line-height: 1.1;">
+                                    <span style="position: absolute; left: 0; color: #9966ff; font-weight: bold;">•</span>
+                                    STX 简介
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 4px; padding-left: 14px; position: relative; font-size: 0.75rem; line-height: 1.1;">
+                                    <span style="position: absolute; left: 0; color: #9966ff; font-weight: bold;">•</span>
+                                    STX 的发展过程
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 4px; padding-left: 14px; position: relative; font-size: 0.75rem; line-height: 1.1;">
+                                    <span style="position: absolute; left: 0; color: #9966ff; font-weight: bold;">•</span>
+                                    STX 钱包 RPC 节点搭建
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 4px; padding-left: 14px; position: relative; font-size: 0.75rem; line-height: 1.1;">
+                                    <span style="position: absolute; left: 0; color: #9966ff; font-weight: bold;">•</span>
+                                    STX 离线地址生成
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 4px; padding-left: 14px; position: relative; font-size: 0.75rem; line-height: 1.1;">
+                                    <span style="position: absolute; left: 0; color: #9966ff; font-weight: bold;">•</span>
+                                    STX 交易离线签名
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 4px; padding-left: 14px; position: relative; font-size: 0.75rem; line-height: 1.1;">
+                                    <span style="position: absolute; left: 0; color: #9966ff; font-weight: bold;">•</span>
+                                    STX 钱包相关的 RPC 接口介绍
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- 分隔线4 -->
+                    <div style="background: linear-gradient(to bottom, transparent, #9966ff, #00ff88, transparent); opacity: 0.6;"></div>
+
+                    <!-- 第五列：实战项目 -->
+                    <div style="padding-left: 10px;">
+                        <div style="margin-bottom: 20px;">
+                            <h3 style="color: #00ff88; font-size: 1.2rem; font-weight: 600; margin-bottom: 15px; text-align: center; border-bottom: 2px solid #00ff88; padding-bottom: 6px;">交易所钱包开发实战</h3>
+                            <ul style="list-style: none; padding: 0;">
+                                <li style="color: #e0e0e0; margin-bottom: 8px; padding-left: 16px; position: relative; font-size: 0.82rem; line-height: 1.3;">
+                                    <span style="position: absolute; left: 0; color: #00ff88; font-weight: bold;">•</span>
+                                    Bitcoin 中心化钱包开发实战
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 8px; padding-left: 16px; position: relative; font-size: 0.82rem; line-height: 1.3;">
+                                    <span style="position: absolute; left: 0; color: #00ff88; font-weight: bold;">•</span>
+                                    Ethereum 中心化钱包开发实战
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 8px; padding-left: 16px; position: relative; font-size: 0.82rem; line-height: 1.3;">
+                                    <span style="position: absolute; left: 0; color: #00ff88; font-weight: bold;">•</span>
+                                    Cosmos 中心化钱包开发实战
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 12px; padding-left: 16px; position: relative; font-size: 0.82rem; line-height: 1.3;">
+                                    <span style="position: absolute; left: 0; color: #00ff88; font-weight: bold;">•</span>
+                                    Tron 中心化钱包开发实战
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div style="margin-bottom: 20px;">
+                            <h3 style="color: #0088ff; font-size: 1.2rem; font-weight: 600; margin-bottom: 15px; text-align: center; border-bottom: 2px solid #0088ff; padding-bottom: 6px;">MPC 托管系统开发实战</h3>
+                            <ul style="list-style: none; padding: 0;">
+                                <li style="color: #e0e0e0; margin-bottom: 8px; padding-left: 16px; position: relative; font-size: 0.82rem; line-height: 1.3;">
+                                    <span style="position: absolute; left: 0; color: #0088ff; font-weight: bold;">•</span>
+                                    MPC 技术选型
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 8px; padding-left: 16px; position: relative; font-size: 0.82rem; line-height: 1.3;">
+                                    <span style="position: absolute; left: 0; color: #0088ff; font-weight: bold;">•</span>
+                                    MPC 算法分析
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 8px; padding-left: 16px; position: relative; font-size: 0.82rem; line-height: 1.3;">
+                                    <span style="position: absolute; left: 0; color: #0088ff; font-weight: bold;">•</span>
+                                    功能模块拆分和数据结构设计
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 8px; padding-left: 16px; position: relative; font-size: 0.82rem; line-height: 1.3;">
+                                    <span style="position: absolute; left: 0; color: #0088ff; font-weight: bold;">•</span>
+                                    MPC 网络的 node 和 manager 开发
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 12px; padding-left: 16px; position: relative; font-size: 0.82rem; line-height: 1.3;">
+                                    <span style="position: absolute; left: 0; color: #0088ff; font-weight: bold;">•</span>
+                                    MPC 托管系统完整代码实施与测试
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div style="margin-bottom: 20px;">
+                            <h3 style="color: #ffaa00; font-size: 1.2rem; font-weight: 600; margin-bottom: 15px; text-align: center; border-bottom: 2px solid #ffaa00; padding-bottom: 6px;">去中心化钱包开发实战</h3>
+                            <ul style="list-style: none; padding: 0;">
+                                <li style="color: #e0e0e0; margin-bottom: 6px; padding-left: 16px; position: relative; font-size: 0.8rem; line-height: 1.2;">
+                                    <span style="position: absolute; left: 0; color: #ffaa00; font-weight: bold;">•</span>
+                                    项目架构设计
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 6px; padding-left: 16px; position: relative; font-size: 0.8rem; line-height: 1.2;">
+                                    <span style="position: absolute; left: 0; color: #ffaa00; font-weight: bold;">•</span>
+                                    功能模块
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 6px; padding-left: 16px; position: relative; font-size: 0.8rem; line-height: 1.2;">
+                                    <span style="position: absolute; left: 0; color: #ffaa00; font-weight: bold;">•</span>
+                                    客户端数据库表设计
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 6px; padding-left: 16px; position: relative; font-size: 0.8rem; line-height: 1.2;">
+                                    <span style="position: absolute; left: 0; color: #ffaa00; font-weight: bold;">•</span>
+                                    后端数据库表设计
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 6px; padding-left: 16px; position: relative; font-size: 0.8rem; line-height: 1.2;">
+                                    <span style="position: absolute; left: 0; color: #ffaa00; font-weight: bold;">•</span>
+                                    统一数据服务平台设计
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 6px; padding-left: 16px; position: relative; font-size: 0.8rem; line-height: 1.2;">
+                                    <span style="position: absolute; left: 0; color: #ffaa00; font-weight: bold;">•</span>
+                                    统一行情服务平台设计
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 6px; padding-left: 16px; position: relative; font-size: 0.8rem; line-height: 1.2;">
+                                    <span style="position: absolute; left: 0; color: #ffaa00; font-weight: bold;">•</span>
+                                    接口交互设计
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 6px; padding-left: 16px; position: relative; font-size: 0.8rem; line-height: 1.2;">
+                                    <span style="position: absolute; left: 0; color: #ffaa00; font-weight: bold;">•</span>
+                                    通用型 HD 钱包 wallet-sdk 开发实战
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 6px; padding-left: 16px; position: relative; font-size: 0.8rem; line-height: 1.2;">
+                                    <span style="position: absolute; left: 0; color: #ffaa00; font-weight: bold;">•</span>
+                                    前后端代码开发实战
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 12px; padding-left: 16px; position: relative; font-size: 0.8rem; line-height: 1.2;">
+                                    <span style="position: absolute; left: 0; color: #ffaa00; font-weight: bold;">•</span>
+                                    项目整体测试
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div style="margin-bottom: 20px;">
+                            <h3 style="color: #9966ff; font-size: 1.2rem; font-weight: 600; margin-bottom: 15px; text-align: center; border-bottom: 2px solid #9966ff; padding-bottom: 6px;">DappLink 一键发钱包实战</h3>
+                            <ul style="list-style: none; padding: 0;">
+                                <li style="color: #e0e0e0; margin-bottom: 6px; padding-left: 16px; position: relative; font-size: 0.8rem; line-height: 1.2;">
+                                    <span style="position: absolute; left: 0; color: #9966ff; font-weight: bold;">•</span>
+                                    项目架构分析
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 6px; padding-left: 16px; position: relative; font-size: 0.8rem; line-height: 1.2;">
+                                    <span style="position: absolute; left: 0; color: #9966ff; font-weight: bold;">•</span>
+                                    统一 RPC GetWay开发实战
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 6px; padding-left: 16px; position: relative; font-size: 0.8rem; line-height: 1.2;">
+                                    <span style="position: absolute; left: 0; color: #9966ff; font-weight: bold;">•</span>
+                                    统一行情服务开发实战
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 6px; padding-left: 16px; position: relative; font-size: 0.8rem; line-height: 1.2;">
+                                    <span style="position: absolute; left: 0; color: #9966ff; font-weight: bold;">•</span>
+                                    去中心化密钥托管开发实战
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 6px; padding-left: 16px; position: relative; font-size: 0.8rem; line-height: 1.2;">
+                                    <span style="position: absolute; left: 0; color: #9966ff; font-weight: bold;">•</span>
+                                    中心化钱包签名机开发实战
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 6px; padding-left: 16px; position: relative; font-size: 0.8rem; line-height: 1.2;">
+                                    <span style="position: absolute; left: 0; color: #9966ff; font-weight: bold;">•</span>
+                                    中心化交易所统一扫链服务
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 6px; padding-left: 16px; position: relative; font-size: 0.8rem; line-height: 1.2;">
+                                    <span style="position: absolute; left: 0; color: #9966ff; font-weight: bold;">•</span>
+                                    MPC 托管服务开发实战
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 6px; padding-left: 16px; position: relative; font-size: 0.8rem; line-height: 1.2;">
+                                    <span style="position: absolute; left: 0; color: #9966ff; font-weight: bold;">•</span>
+                                    对接业务平台开发实战
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 6px; padding-left: 16px; position: relative; font-size: 0.8rem; line-height: 1.2;">
+                                    <span style="position: absolute; left: 0; color: #9966ff; font-weight: bold;">•</span>
+                                    基于一键发钱包开发自己的去中心化钱包
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 幻灯片5: 第四阶段 - 公链技术实战（第一页）-->
+        <div class="slide" id="slide5">
+            <div class="slide-content">
+                <h2>第四阶段：公链技术实战（第一页）</h2>
+                
+                <!-- 使用线条分区的布局 -->
+                <div style="display: grid; grid-template-columns: 1fr 2px 1fr 2px 1fr; gap: 25px; margin-top: 40px; max-width: 1500px; margin-left: auto; margin-right: auto;">
+                    
+                    <!-- 第一列：Cosmos 基础篇 -->
+                    <div style="padding-right: 12px;">
+                        <div style="margin-bottom: 30px;">
+                            <h3 style="color: #00ff88; font-size: 1.4rem; font-weight: 600; margin-bottom: 18px; text-align: center; border-bottom: 2px solid #00ff88; padding-bottom: 8px;">Cosmos 基础篇</h3>
+                            <ul style="list-style: none; padding: 0;">
+                                <li style="color: #e0e0e0; margin-bottom: 8px; padding-left: 18px; position: relative; font-size: 0.88rem; line-height: 1.3;">
+                                    <span style="position: absolute; left: 0; color: #00ff88; font-weight: bold;">•</span>
+                                    模块化区块链理念
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 8px; padding-left: 18px; position: relative; font-size: 0.88rem; line-height: 1.3;">
+                                    <span style="position: absolute; left: 0; color: #00ff88; font-weight: bold;">•</span>
+                                    CometBFT 详细介绍
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 8px; padding-left: 18px; position: relative; font-size: 0.88rem; line-height: 1.3;">
+                                    <span style="position: absolute; left: 0; color: #00ff88; font-weight: bold;">•</span>
+                                    CometBFT 与 Tendermint 的关系
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 8px; padding-left: 18px; position: relative; font-size: 0.88rem; line-height: 1.3;">
+                                    <span style="position: absolute; left: 0; color: #00ff88; font-weight: bold;">•</span>
+                                    PBFT 共识算法详解
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 8px; padding-left: 18px; position: relative; font-size: 0.88rem; line-height: 1.3;">
+                                    <span style="position: absolute; left: 0; color: #00ff88; font-weight: bold;">•</span>
+                                    HyperLedger Fabric PBFT 共识算法编码实现
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 8px; padding-left: 18px; position: relative; font-size: 0.88rem; line-height: 1.3;">
+                                    <span style="position: absolute; left: 0; color: #00ff88; font-weight: bold;">•</span>
+                                    Tendermint 共识算法详解与代码解读
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 8px; padding-left: 18px; position: relative; font-size: 0.88rem; line-height: 1.3;">
+                                    <span style="position: absolute; left: 0; color: #00ff88; font-weight: bold;">•</span>
+                                    如何使用 ABCI 与 Tendermint 进行交互
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 8px; padding-left: 18px; position: relative; font-size: 0.88rem; line-height: 1.3;">
+                                    <span style="position: absolute; left: 0; color: #00ff88; font-weight: bold;">•</span>
+                                    Cosmos 生态详解介绍
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 8px; padding-left: 18px; position: relative; font-size: 0.88rem; line-height: 1.3;">
+                                    <span style="position: absolute; left: 0; color: #00ff88; font-weight: bold;">•</span>
+                                    Cosmos Hub 底层运行原理解析
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 8px; padding-left: 18px; position: relative; font-size: 0.88rem; line-height: 1.3;">
+                                    <span style="position: absolute; left: 0; color: #00ff88; font-weight: bold;">•</span>
+                                    Cosmos SDK 简介
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 8px; padding-left: 18px; position: relative; font-size: 0.88rem; line-height: 1.3;">
+                                    <span style="position: absolute; left: 0; color: #00ff88; font-weight: bold;">•</span>
+                                    理解 Cosmos SDK 架构原理与代码实现
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 8px; padding-left: 18px; position: relative; font-size: 0.88rem; line-height: 1.3;">
+                                    <span style="position: absolute; left: 0; color: #00ff88; font-weight: bold;">•</span>
+                                    Cosmos SDK 模块化处理流程源码解读
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 8px; padding-left: 18px; position: relative; font-size: 0.88rem; line-height: 1.3;">
+                                    <span style="position: absolute; left: 0; color: #00ff88; font-weight: bold;">•</span>
+                                    深入理解 IBC 跨链通信协议底层原理与代码实现
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 8px; padding-left: 18px; position: relative; font-size: 0.88rem; line-height: 1.3;">
+                                    <span style="position: absolute; left: 0; color: #00ff88; font-weight: bold;">•</span>
+                                    Interchain Security 共享共识层实现
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 8px; padding-left: 18px; position: relative; font-size: 0.88rem; line-height: 1.3;">
+                                    <span style="position: absolute; left: 0; color: #00ff88; font-weight: bold;">•</span>
+                                    Cosmos 生态数据可用层项目 Celestia 底层原理与源码解读
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 8px; padding-left: 18px; position: relative; font-size: 0.88rem; line-height: 1.3;">
+                                    <span style="position: absolute; left: 0; color: #00ff88; font-weight: bold;">•</span>
+                                    Rust 基础语法学习
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- 分隔线1 -->
+                    <div style="background: linear-gradient(to bottom, transparent, #00ff88, #0088ff, transparent); opacity: 0.6;"></div>
+
+                    <!-- 第二列：Cosmos 进阶篇 -->
+                    <div style="padding: 0 12px;">
+                        <div style="margin-bottom: 30px;">
+                            <h3 style="color: #0088ff; font-size: 1.4rem; font-weight: 600; margin-bottom: 18px; text-align: center; border-bottom: 2px solid #0088ff; padding-bottom: 8px;">Cosmos 进阶篇</h3>
+                            
+                            <!-- 基于 CometBFT 开发简版区块链系统 -->
+                            <div style="margin-bottom: 20px;">
+                                <h4 style="color: #ffaa00; font-size: 1.1rem; font-weight: 600; margin-bottom: 12px;">基于 CometBFT 开发简版区块链系统</h4>
+                                <ul style="list-style: none; padding: 0; margin-left: 15px;">
+                                    <li style="color: #cccccc; margin-bottom: 6px; padding-left: 15px; position: relative; font-size: 0.82rem; line-height: 1.3;">
+                                        <span style="position: absolute; left: 0; color: #ffaa00;">•</span>
+                                        区块落地机制：如何存储和确认区块
+                                    </li>
+                                    <li style="color: #cccccc; margin-bottom: 6px; padding-left: 15px; position: relative; font-size: 0.82rem; line-height: 1.3;">
+                                        <span style="position: absolute; left: 0; color: #ffaa00;">•</span>
+                                        区块链状态转换：交易执行后的链上状态变更
+                                    </li>
+                                    <li style="color: #cccccc; margin-bottom: 15px; padding-left: 15px; position: relative; font-size: 0.82rem; line-height: 1.3;">
+                                        <span style="position: absolute; left: 0; color: #ffaa00;">•</span>
+                                        交易执行 & 共识处理：如何在 CometBFT 框架下完成交易验证、排序及共识流程
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <!-- 快速搭建 Cosmos Hub 兼容链 -->
+                            <div style="margin-bottom: 20px;">
+                                <h4 style="color: #9966ff; font-size: 1.1rem; font-weight: 600; margin-bottom: 12px;">快速搭建 Cosmos Hub 兼容链</h4>
+                                <ul style="list-style: none; padding: 0; margin-left: 15px;">
+                                    <li style="color: #cccccc; margin-bottom: 6px; padding-left: 15px; position: relative; font-size: 0.82rem; line-height: 1.3;">
+                                        <span style="position: absolute; left: 0; color: #9966ff;">•</span>
+                                        使用 Gaia 构建 Cosmos Hub 兼容链
+                                    </li>
+                                    <li style="color: #cccccc; margin-bottom: 6px; padding-left: 15px; position: relative; font-size: 0.82rem; line-height: 1.3;">
+                                        <span style="position: absolute; left: 0; color: #9966ff;">•</span>
+                                        配置链参数
+                                    </li>
+                                    <li style="color: #cccccc; margin-bottom: 6px; padding-left: 15px; position: relative; font-size: 0.82rem; line-height: 1.3;">
+                                        <span style="position: absolute; left: 0; color: #9966ff;">•</span>
+                                        运行 & 测试 Gaia 链
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 分隔线2 -->
+                    <div style="background: linear-gradient(to bottom, transparent, #0088ff, #ffaa00, transparent); opacity: 0.6;"></div>
+
+                    <!-- 第三列：Cosmos 实战篇 -->
+                    <div style="padding-left: 12px;">
+                        <div style="margin-bottom: 30px;">
+                            <h3 style="color: #ffaa00; font-size: 1.4rem; font-weight: 600; margin-bottom: 18px; text-align: center; border-bottom: 2px solid #ffaa00; padding-bottom: 8px;">Cosmos 实战篇</h3>
+                            
+                            <!-- 基于 Cosmos-SDK & CometBFT 构建应用链 -->
+                            <div style="margin-bottom: 20px;">
+                                <h4 style="color: #00ff88; font-size: 1.1rem; font-weight: 600; margin-bottom: 12px;">基于 Cosmos-SDK & CometBFT 构建应用链</h4>
+                                <ul style="list-style: none; padding: 0; margin-left: 15px;">
+                                    <li style="color: #cccccc; margin-bottom: 6px; padding-left: 15px; position: relative; font-size: 0.82rem; line-height: 1.3;">
+                                        <span style="position: absolute; left: 0; color: #00ff88;">•</span>
+                                        定制自己的应用链
+                                    </li>
+                                    <li style="color: #cccccc; margin-bottom: 6px; padding-left: 15px; position: relative; font-size: 0.82rem; line-height: 1.3;">
+                                        <span style="position: absolute; left: 0; color: #00ff88;">•</span>
+                                        如何编写自定义模块
+                                    </li>
+                                    <li style="color: #cccccc; margin-bottom: 6px; padding-left: 15px; position: relative; font-size: 0.82rem; line-height: 1.3;">
+                                        <span style="position: absolute; left: 0; color: #00ff88;">•</span>
+                                        交易处理 & 共识层交互
+                                    </li>
+                                    <li style="color: #cccccc; margin-bottom: 15px; padding-left: 15px; position: relative; font-size: 0.82rem; line-height: 1.3;">
+                                        <span style="position: absolute; left: 0; color: #00ff88;">•</span>
+                                        使用 Rust 编写 Wasm 合约，将合约部署到自己构建的应用链上，实现签名有效性验证
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <!-- 基于 Cosmos-SDK & CometBFT 构建 DA（数据可用性）层 -->
+                            <div style="margin-bottom: 20px;">
+                                <h4 style="color: #0088ff; font-size: 1.1rem; font-weight: 600; margin-bottom: 12px;">基于 Cosmos-SDK & CometBFT 构建 DA（数据可用性）层</h4>
+                                <ul style="list-style: none; padding: 0; margin-left: 15px;">
+                                    <li style="color: #cccccc; margin-bottom: 6px; padding-left: 15px; position: relative; font-size: 0.82rem; line-height: 1.3;">
+                                        <span style="position: absolute; left: 0; color: #0088ff;">•</span>
+                                        DA 层的作用 & 设计原理
+                                    </li>
+                                    <li style="color: #cccccc; margin-bottom: 6px; padding-left: 15px; position: relative; font-size: 0.82rem; line-height: 1.3;">
+                                        <span style="position: absolute; left: 0; color: #0088ff;">•</span>
+                                        如何利用 Cosmos-SDK & CometBFT 搭建数据可用性层
+                                    </li>
+                                    <li style="color: #cccccc; margin-bottom: 6px; padding-left: 15px; position: relative; font-size: 0.82rem; line-height: 1.3;">
+                                        <span style="position: absolute; left: 0; color: #0088ff;">•</span>
+                                        交易数据存储 & 提交机制 & 数据可用性验证机制
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <!-- 项目分析部分 -->
+                            <div style="margin-bottom: 15px;">
+                                <h4 style="color: #9966ff; font-size: 1.1rem; font-weight: 600; margin-bottom: 10px;">Babylon 项目分析</h4>
+                                <ul style="list-style: none; padding: 0;">
+                                    <li style="color: #e0e0e0; margin-bottom: 5px; padding-left: 18px; position: relative; font-size: 0.8rem; line-height: 1.2;">
+                                        <span style="position: absolute; left: 0; color: #9966ff; font-weight: bold;">•</span>
+                                        Babylon 项目核心原理
+                                    </li>
+                                    <li style="color: #e0e0e0; margin-bottom: 5px; padding-left: 18px; position: relative; font-size: 0.8rem; line-height: 1.2;">
+                                        <span style="position: absolute; left: 0; color: #9966ff; font-weight: bold;">•</span>
+                                        如何实现比特币经济安全性与 Cosmos 生态的融合
+                                    </li>
+                                    <li style="color: #e0e0e0; margin-bottom: 5px; padding-left: 18px; position: relative; font-size: 0.8rem; line-height: 1.2;">
+                                        <span style="position: absolute; left: 0; color: #9966ff; font-weight: bold;">•</span>
+                                        源码解读：PoS 复用比特币安全性机制
+                                    </li>
+                                    <li style="color: #e0e0e0; margin-bottom: 10px; padding-left: 18px; position: relative; font-size: 0.8rem; line-height: 1.2;">
+                                        <span style="position: absolute; left: 0; color: #9966ff; font-weight: bold;">•</span>
+                                        Babylon 如何赋能 Layer2 项目的快速验证网络
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <div style="margin-bottom: 15px;">
+                                <h4 style="color: #00ff88; font-size: 1.1rem; font-weight: 600; margin-bottom: 10px;">dYdX Chain 项目分析</h4>
+                                <ul style="list-style: none; padding: 0;">
+                                    <li style="color: #e0e0e0; margin-bottom: 5px; padding-left: 18px; position: relative; font-size: 0.8rem; line-height: 1.2;">
+                                        <span style="position: absolute; left: 0; color: #00ff88; font-weight: bold;">•</span>
+                                        dYdX 从以太坊迁移到 Cosmos 生态的原因
+                                    </li>
+                                    <li style="color: #e0e0e0; margin-bottom: 5px; padding-left: 18px; position: relative; font-size: 0.8rem; line-height: 1.2;">
+                                        <span style="position: absolute; left: 0; color: #00ff88; font-weight: bold;">•</span>
+                                        dYdX Chain 技术架构
+                                    </li>
+                                    <li style="color: #e0e0e0; margin-bottom: 10px; padding-left: 18px; position: relative; font-size: 0.8rem; line-height: 1.2;">
+                                        <span style="position: absolute; left: 0; color: #00ff88; font-weight: bold;">•</span>
+                                        交易撮合 & 订单簿机制源码解析
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <div style="margin-bottom: 15px;">
+                                <h4 style="color: #0088ff; font-size: 1.1rem; font-weight: 600; margin-bottom: 10px;">DappLink Layer3 技术解决方案</h4>
+                                <ul style="list-style: none; padding: 0;">
+                                    <li style="color: #e0e0e0; margin-bottom: 5px; padding-left: 18px; position: relative; font-size: 0.8rem; line-height: 1.2;">
+                                        <span style="position: absolute; left: 0; color: #0088ff; font-weight: bold;">•</span>
+                                        DappLink Layer3 项目核心原理
+                                    </li>
+                                    <li style="color: #e0e0e0; margin-bottom: 5px; padding-left: 18px; position: relative; font-size: 0.8rem; line-height: 1.2;">
+                                        <span style="position: absolute; left: 0; color: #0088ff; font-weight: bold;">•</span>
+                                        DappLink Layer3 技术架构
+                                    </li>
+                                    <li style="color: #e0e0e0; margin-bottom: 5px; padding-left: 18px; position: relative; font-size: 0.8rem; line-height: 1.2;">
+                                        <span style="position: absolute; left: 0; color: #0088ff; font-weight: bold;">•</span>
+                                        社交 & 游戏，托管，交易模块源码解析
+                                    </li>
+                                    <li style="color: #e0e0e0; margin-bottom: 10px; padding-left: 18px; position: relative; font-size: 0.8rem; line-height: 1.2;">
+                                        <span style="position: absolute; left: 0; color: #0088ff; font-weight: bold;">•</span>
+                                        DappLink 如何依赖于 Layer2 的安全性解析
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <div>
+                                <h4 style="color: #ffaa00; font-size: 1.1rem; font-weight: 600; margin-bottom: 10px;">基于 Ethereum 的 Layer2 生态</h4>
+                                <ul style="list-style: none; padding: 0;">
+                                    <li style="color: #e0e0e0; margin-bottom: 5px; padding-left: 18px; position: relative; font-size: 0.8rem; line-height: 1.2;">
+                                        <span style="position: absolute; left: 0; color: #ffaa00; font-weight: bold;">•</span>
+                                        Ethereum, Layer2, Cosmos 和 DA 相关概念介绍
+                                    </li>
+                                    <li style="color: #e0e0e0; margin-bottom: 5px; padding-left: 18px; position: relative; font-size: 0.8rem; line-height: 1.2;">
+                                        <span style="position: absolute; left: 0; color: #ffaa00; font-weight: bold;">•</span>
+                                        Ethereum 底层实现与源码简单解读
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 幻灯片6: 第四阶段 - 公链技术实战（第二页）-->
+        <div class="slide" id="slide6">
+            <div class="slide-content">
+                <h2>第四阶段：公链技术实战（第二页）</h2>
+                
+                <!-- 使用线条分区的布局 -->
+                <div style="display: grid; grid-template-columns: 1fr 2px 1fr 2px 1fr 2px 1fr; gap: 20px; margin-top: 40px; max-width: 1600px; margin-left: auto; margin-right: auto;">
+                    
+                    <!-- 第一列：OVM 和 OpStack -->
+                    <div style="padding-right: 10px;">
+                        <div style="margin-bottom: 25px;">
+                            <h3 style="color: #00ff88; font-size: 1.3rem; font-weight: 600; margin-bottom: 15px; text-align: center; border-bottom: 2px solid #00ff88; padding-bottom: 6px;">OVM 和 OpStack</h3>
+                            <ul style="list-style: none; padding: 0;">
+                                <li style="color: #e0e0e0; margin-bottom: 8px; padding-left: 16px; position: relative; font-size: 0.82rem; line-height: 1.3;">
+                                    <span style="position: absolute; left: 0; color: #00ff88; font-weight: bold;">•</span>
+                                    OVM 代码详解---Mantle v1 和 Metis 代码解读
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 8px; padding-left: 16px; position: relative; font-size: 0.82rem; line-height: 1.3;">
+                                    <span style="position: absolute; left: 0; color: #00ff88; font-weight: bold;">•</span>
+                                    OpStack 的 ethereum-optimistim 项目源码解读
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 8px; padding-left: 16px; position: relative; font-size: 0.82rem; line-height: 1.3;">
+                                    <span style="position: absolute; left: 0; color: #00ff88; font-weight: bold;">•</span>
+                                    本地机器启动 OpStack 运行测试
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 8px; padding-left: 16px; position: relative; font-size: 0.82rem; line-height: 1.3;">
+                                    <span style="position: absolute; left: 0; color: #00ff88; font-weight: bold;">•</span>
+                                    OpStack 将是数据 Rollup 到 Celestia 实战
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 8px; padding-left: 16px; position: relative; font-size: 0.82rem; line-height: 1.3;">
+                                    <span style="position: absolute; left: 0; color: #00ff88; font-weight: bold;">•</span>
+                                    OpStack 将是数据 Rollup 到 EigenDA 实战
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 8px; padding-left: 16px; position: relative; font-size: 0.82rem; line-height: 1.3;">
+                                    <span style="position: absolute; left: 0; color: #00ff88; font-weight: bold;">•</span>
+                                    OpStack SuperChain 源码解读
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div style="margin-bottom: 25px;">
+                            <h3 style="color: #0088ff; font-size: 1.3rem; font-weight: 600; margin-bottom: 15px; text-align: center; border-bottom: 2px solid #0088ff; padding-bottom: 6px;">EigenDA 项目源码解读</h3>
+                            <ul style="list-style: none; padding: 0;">
+                                <li style="color: #e0e0e0; margin-bottom: 8px; padding-left: 16px; position: relative; font-size: 0.82rem; line-height: 1.3;">
+                                    <span style="position: absolute; left: 0; color: #0088ff; font-weight: bold;">•</span>
+                                    EigenDA 架构设计与实现
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 8px; padding-left: 16px; position: relative; font-size: 0.82rem; line-height: 1.3;">
+                                    <span style="position: absolute; left: 0; color: #0088ff; font-weight: bold;">•</span>
+                                    数据可用性验证机制
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 8px; padding-left: 16px; position: relative; font-size: 0.82rem; line-height: 1.3;">
+                                    <span style="position: absolute; left: 0; color: #0088ff; font-weight: bold;">•</span>
+                                    与 Layer2 项目的集成方案
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- 分隔线1 -->
+                    <div style="background: linear-gradient(to bottom, transparent, #00ff88, #0088ff, transparent); opacity: 0.6;"></div>
+
+                    <!-- 第二列：Polygon ZkEvm -->
+                    <div style="padding: 0 10px;">
+                        <div style="margin-bottom: 25px;">
+                            <h3 style="color: #ffaa00; font-size: 1.3rem; font-weight: 600; margin-bottom: 15px; text-align: center; border-bottom: 2px solid #ffaa00; padding-bottom: 6px;">Polygon ZkEvm</h3>
+                            
+                            <!-- 零知识算法的普及 -->
+                            <div style="margin-bottom: 15px;">
+                                <h4 style="color: #9966ff; font-size: 1rem; font-weight: 600; margin-bottom: 10px;">零知识算法的普及(针对面试)</h4>
+                            </div>
+
+                            <!-- Polygon ZkEvm 技术深度解析 -->
+                            <div style="margin-bottom: 15px;">
+                                <h4 style="color: #00ff88; font-size: 1rem; font-weight: 600; margin-bottom: 10px;">Polygon ZkEvm 技术深度解析</h4>
+                                <ul style="list-style: none; padding: 0; margin-left: 10px;">
+                                    <li style="color: #cccccc; margin-bottom: 6px; padding-left: 12px; position: relative; font-size: 0.8rem; line-height: 1.2;">
+                                        <span style="position: absolute; left: 0; color: #00ff88;">•</span>
+                                        Polygon zkEvm 的 zkevm-node 源码解读
+                                    </li>
+                                    <li style="color: #cccccc; margin-bottom: 6px; padding-left: 12px; position: relative; font-size: 0.8rem; line-height: 1.2;">
+                                        <span style="position: absolute; left: 0; color: #00ff88;">•</span>
+                                        Polygon zkEvm 的 zkevm-prover 源码讲解
+                                    </li>
+                                    <li style="color: #cccccc; margin-bottom: 6px; padding-left: 12px; position: relative; font-size: 0.8rem; line-height: 1.2;">
+                                        <span style="position: absolute; left: 0; color: #00ff88;">•</span>
+                                        Polygon zkEvm 的 zkevm-prover 的 zk snark 和 stark 怎么构建分析
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 分隔线2 -->
+                    <div style="background: linear-gradient(to bottom, transparent, #0088ff, #ffaa00, transparent); opacity: 0.6;"></div>
+
+                    <!-- 第三列：Arbitrum Nitro -->
+                    <div style="padding: 0 10px;">
+                        <div style="margin-bottom: 25px;">
+                            <h3 style="color: #9966ff; font-size: 1.3rem; font-weight: 600; margin-bottom: 15px; text-align: center; border-bottom: 2px solid #9966ff; padding-bottom: 6px;">Arbitrum Nitro</h3>
+                            <ul style="list-style: none; padding: 0;">
+                                <li style="color: #e0e0e0; margin-bottom: 8px; padding-left: 16px; position: relative; font-size: 0.82rem; line-height: 1.3;">
+                                    <span style="position: absolute; left: 0; color: #9966ff; font-weight: bold;">•</span>
+                                    Arbitrum Nitro 的项目架构分析
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 8px; padding-left: 16px; position: relative; font-size: 0.82rem; line-height: 1.3;">
+                                    <span style="position: absolute; left: 0; color: #9966ff; font-weight: bold;">•</span>
+                                    Arbitrum Nitro 源码解读
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 8px; padding-left: 16px; position: relative; font-size: 0.82rem; line-height: 1.3;">
+                                    <span style="position: absolute; left: 0; color: #9966ff; font-weight: bold;">•</span>
+                                    深入理解 Arbi Gas Oracle 的细节实现
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- 分隔线3 -->
+                    <div style="background: linear-gradient(to bottom, transparent, #ffaa00, #9966ff, transparent); opacity: 0.6;"></div>
+
+                    <!-- 第四列：Layer2 官方桥源码解读 -->
+                    <div style="padding-left: 10px;">
+                        <div style="margin-bottom: 25px;">
+                            <h3 style="color: #0088ff; font-size: 1.3rem; font-weight: 600; margin-bottom: 15px; text-align: center; border-bottom: 2px solid #0088ff; padding-bottom: 6px;">Layer2 官方桥源码解读</h3>
+                            <ul style="list-style: none; padding: 0;">
+                                <li style="color: #e0e0e0; margin-bottom: 8px; padding-left: 16px; position: relative; font-size: 0.82rem; line-height: 1.3;">
+                                    <span style="position: absolute; left: 0; color: #0088ff; font-weight: bold;">•</span>
+                                    ZkSync Era 官方桥源码解读
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 8px; padding-left: 16px; position: relative; font-size: 0.82rem; line-height: 1.3;">
+                                    <span style="position: absolute; left: 0; color: #0088ff; font-weight: bold;">•</span>
+                                    Linea 官方桥源码解读
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 8px; padding-left: 16px; position: relative; font-size: 0.82rem; line-height: 1.3;">
+                                    <span style="position: absolute; left: 0; color: #0088ff; font-weight: bold;">•</span>
+                                    Scroll 官方桥源码解读
+                                </li>
+                                <li style="color: #e0e0e0; margin-bottom: 8px; padding-left: 16px; position: relative; font-size: 0.82rem; line-height: 1.3;">
+                                    <span style="position: absolute; left: 0; color: #0088ff; font-weight: bold;">•</span>
+                                    StarkNet 官方桥源码解读
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 幻灯片7: 课程总结 -->
+        <div class="slide" id="slide7">
+            <div class="slide-content">
+                <h1>课程总结</h1>
+                <p class="description">
+                    TheWeb3 技术开发课程全面覆盖区块链技术栈<br>
+                    从基础概念到高级应用，从理论学习到项目实战
+                </p>
+                
+                <div class="course-grid-2">
+                    <div class="curriculum-container">
+                        <div class="stage-title">核心技术栈覆盖</div>
+                        <ul class="topic-list">
+                            <li class="topic-item">区块链基础理论与密码学</li>
+                            <li class="topic-item">智能合约开发与DeFi协议</li>
+                            <li class="topic-item">多链钱包开发与安全</li>
+                            <li class="topic-item">公链架构与Layer2技术</li>
+                            <li class="topic-item">跨链通信与模块化区块链</li>
+                        </ul>
+                    </div>
+
+                    <div class="curriculum-container">
+                        <div class="stage-title">实战项目经验</div>
+                        <ul class="topic-list">
+                            <li class="topic-item">从零构建区块链应用</li>
+                            <li class="topic-item">企业级钱包系统开发</li>
+                            <li class="topic-item">DeFi协议源码解析</li>
+                            <li class="topic-item">Layer2解决方案实现</li>
+                            <li class="topic-item">跨链桥与预言机开发</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div style="text-align: center; margin-top: 50px; font-size: 1.2rem; color: #00ff88;">
+                    🚀 开启您的Web3开发之旅！
+                </div>
+
+                <div style="text-align: center; margin-top: 40px;">
+                    <button onclick="this.style.transform='scale(0.98)'; setTimeout(() => window.location.href='index.html', 100)" style="
+                        background: linear-gradient(135deg, rgba(0, 255, 136, 0.2), rgba(0, 136, 255, 0.2));
+                        border: 2px solid #00ff88;
+                        border-radius: 12px;
+                        padding: 15px 30px;
+                        color: #ffffff;
+                        font-size: 1rem;
+                        font-weight: 600;
+                        cursor: pointer;
+                        transition: all 0.15s ease;
+                        backdrop-filter: blur(10px);
+                        position: relative;
+                        overflow: hidden;
+                        user-select: none;
+                        -webkit-tap-highlight-color: transparent;
+                    " onmouseover="this.style.transform='translateY(-2px) scale(1.02)'; this.style.boxShadow='0 10px 20px rgba(0, 255, 136, 0.3)'; this.style.borderColor='rgba(0, 255, 136, 0.8)'" onmouseout="this.style.transform='translateY(0) scale(1)'; this.style.boxShadow='none'; this.style.borderColor='#00ff88'" onmousedown="this.style.transform='scale(0.98)'" onmouseup="this.style.transform='translateY(-2px) scale(1.02)'">
+                        ← 返回课程主页
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 导航控制 -->
+    <div class="slide-nav" id="slideNav"></div>
+    
+    <!-- 箭头导航 -->
+    <div class="slide-arrow arrow-prev" onclick="prevSlide()">‹</div>
+    <div class="slide-arrow arrow-next" onclick="nextSlide()">›</div>
+
+    <script>
+        // 创建粒子背景
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            const particleCount = 50;
+
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 6 + 's';
+                particle.style.animationDuration = (Math.random() * 3 + 3) + 's';
+                particlesContainer.appendChild(particle);
+            }
+        }
+
+        // 幻灯片控制
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const slideCount = slides.length;
+
+        function createNavDots() {
+            const navContainer = document.getElementById('slideNav');
+            for (let i = 0; i < slideCount; i++) {
+                const dot = document.createElement('div');
+                dot.className = 'nav-dot';
+                if (i === 0) dot.classList.add('active');
+                dot.addEventListener('click', () => goToSlide(i));
+                navContainer.appendChild(dot);
+            }
+        }
+
+        function updateNavDots() {
+            const dots = document.querySelectorAll('.nav-dot');
+            dots.forEach((dot, index) => {
+                dot.classList.toggle('active', index === currentSlide);
+            });
+        }
+
+        function showSlide(index) {
+            slides.forEach((slide, i) => {
+                slide.classList.remove('active', 'prev');
+                if (i === index) {
+                    slide.classList.add('active');
+                } else if (i < index) {
+                    slide.classList.add('prev');
+                }
+            });
+            updateNavDots();
+        }
+
+        function nextSlide() {
+            currentSlide = (currentSlide + 1) % slideCount;
+            showSlide(currentSlide);
+        }
+
+        function prevSlide() {
+            currentSlide = (currentSlide - 1 + slideCount) % slideCount;
+            showSlide(currentSlide);
+        }
+
+        function goToSlide(index) {
+            currentSlide = index;
+            showSlide(currentSlide);
+        }
+
+        // 键盘控制
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === ' ') {
+                nextSlide();
+            } else if (e.key === 'ArrowLeft') {
+                prevSlide();
+            }
+        });
+
+        // 触摸滑动支持
+        let touchStartX = 0;
+        let touchEndX = 0;
+
+        document.addEventListener('touchstart', (e) => {
+            touchStartX = e.changedTouches[0].screenX;
+        });
+
+        document.addEventListener('touchend', (e) => {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        });
+
+        function handleSwipe() {
+            const swipeThreshold = 50;
+            const diff = touchStartX - touchEndX;
+            
+            if (Math.abs(diff) > swipeThreshold) {
+                if (diff > 0) {
+                    nextSlide();
+                } else {
+                    prevSlide();
+                }
+            }
+        }
+
+        // 初始化
+        document.addEventListener('DOMContentLoaded', () => {
+            createParticles();
+            createNavDots();
+        });
+    </script>
+</body>
+</html>
